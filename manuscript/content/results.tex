@@ -1,0 +1,263 @@
+
+\begin{figure*}[ht]
+	\centering
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (b) at (0,-3.8) {\includegraphics[width=.58\columnwidth]{images/chip.JPG}};
+		\node[anchor=north west,inner sep=0pt] (a) at (0.1,0.0) {\input{content/network}};
+		\node[anchor=north west,inner sep=0pt] (c) at (5.15,0.0) {\input{build/figures/rate_evolution.pgf}};
+		\node[anchor=north west,inner sep=0pt] (d) at (5.15,-3.8) {\input{build/figures/final_rate.pgf}};
+		\node[anchor=north west,inner sep=0pt] (e) at (9.3,0.0) {\input{build/figures/weight_histogram.pgf}};
+		\node[anchor=north west,inner sep=0pt] (f) at (9.3,-3.8) {\input{build/figures/connectivity.pgf}};
+		\node[anchor=north west,inner sep=0pt] (g) at (13.45,-3.8) {\input{build/figures/average_weight.pgf}};
+		\node at ($(a.north west) + (0.1,-0.2)$) {\textbf{A}};
+		\node[text=white] at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+		\node at ($(c.north west) + (0.2,-0.2)$) {\textbf{C}};
+		\node at ($(d.north west) + (0.2,-0.2)$) {\textbf{D}};
+		\node at ($(e.north west) + (0.2,-0.2)$) {\textbf{E}};
+		\node at ($(f.north west) + (0.2,-0.2)$) {\textbf{F}};
+		\node at ($(g.north west) + (0.2,-0.2)$) {\textbf{G}};
+	\end{tikzpicture}
+
+	\caption{%
+		\textbf{Reducing the input strength to homeostatically regulated networks of \gls{ei} \gls{lif} neurons strengthens recurrent connections.}
+		\textbf{(A)} Illustration of a random network topology with \SI{80}{\percent} excitatory (blue triangles) and \SI{20}{\percent} inhibitory (red circles) neurons.
+		\textbf{(B)} Image of the BrainScaleS-2 neuromorphic chip.
+		Image taken from \citep{muller_extending_2020}.
+		\textbf{(C)} Homeostatic plasticity regulates the population rate $\nu$ close to a target value (dashed line).
+		\textbf{(D)} For a broad range of external input rates, $\nu$ approximates the target rate.
+		\textbf{(E)} The stochastic homeostatic regulation leads to heterogeneous weight distributions for both, inhibitory and excitatory synapses.
+		The counts of excitatory weights exceed the inhibitory ones by a factor of four due to the imposed \gls{ei} ratio.
+            \textbf{(F)} The effective connectivity, defined as the percentage of non-zero recurrent synapses ($c_{ij}w^\mathrm{rec}_{ij}\neq 0$), does not saturate at its maximum (dashed line) for decreasing input strengths.
+		\textbf{(G)} However, the mean weight increases to compensate for a reduction of input.
+	}
+	\label{fig:chip}
+\end{figure*}
+
+\section{\label{sec:results}Results}
+
+%\subsection{Reducing external input to homeostatically regulated neuromorphic hardware strengthens recurrent connections}
+\subsection{Homeostatically regulated neuromorphic hardware compensates lack of external input by strengthening recurrent connections}
+
+% homeostatic regulation
+To begin, we verify that the experimental setup --- the neuromorphic chip with homeostatic regulation during development --- reaches a stationary dynamical state with firing rates sufficiently close to the target rate.
+Starting from the initial condition of zero recurrent weights ($w^\mathrm{rec}_{ij}=0$), we observe for our chosen parameters a transient relaxation behavior that reaches a stationary firing rate after about \SI{200}{} update iterations, independent of the external input rate $h$ (\cref{fig:chip}C).
+Note that for this representation, the firing rate is evaluated over an interval of $T=\SI{100}{\second}$ between iterations, and further averaged over \num{50} network realizations.
+One can see that for larger values of $h$ (blue curve) the relaxation is smoother than for lower values of $h$ (red curve).
+The stationary firing rates are close to the target rate $\nu^\ast=\SI{10}{\hertz}$ (\cref{fig:chip}D), however, there is a systematic $h$-dependence that presumably originates from the firing rate being a non-linear function of the mean coupling, $\nu(\langle w\rangle)$, as observed in mean-field calculations of \gls{ei} networks~\cite{mastrogiuseppe_intrinsically-generated_2017}. %which might in turn promote unstable activity further enhanced by the limited precision weight dynamics.
+%Since, in this work, we do not seek a perfect match of the target rate but are interested in the self-organized collective dynamics of homeostatically regulated networks in general, we conclude that the homeostatic-plasticity rule reliably regulates the neuron firing rates sufficiently close to the target firing rate.
+Since we find consistent results for reference computer simulations (see Supplemental Material), we conclude that the experimental setup reliably self-organizes into a stationary dynamics state with neuron firing rates sufficiently close to the target rate.
+
+% reducing input strengthens recurrency
+We next investigate how homeostatically regulated \gls{ei} networks compensate a reduction of external input with a strengthening of recurrent connections (\cref{fig:chip}E-G).
+In particular, we find that the histograms of both inhibitory as well as excitatory recurrent coupling weights become flatter with decreasing $h$, indicating strong heterogeneity (\cref{fig:chip}E).
+%It is noteworthy that the limited range of weight values is an effect of the \SI{6}{\bit} integer weights on the neuromorphic hardware.
+Interestingly, the effective connectivity -- the fraction of all physical $K^\mathrm{rec}$ recurrent weights that are not zero -- does not reach its maximum theoretical value of $K^\mathrm{rec}/N = 100 / 512 \approx \SI{20}{\percent}$ (\cref{fig:chip}F).
+Instead, it even decreases for low $h$, which is likely a consequence of the strong variability of rates between iterations (cf. \cref{fig:chip}C) that results in large weight changes for the given plasticity rule and does not affect our main conclusions (see Supplemental Material for a milder plasticity rule).
+%This assumption is further strengthened by a reduced decline of the effective connectivity for a non stochastic and hence more continuous implementation of homeostatic regulation (\cref{fig:hom_comparison}B).
+
+\begin{figure*}[ht]
+	\centering
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (x) at (0.94,-3.8) {\import{build/figures/}{colorbar.pgf}};
+		\node[anchor=north west,inner sep=0pt] (a) at (0,0) {\input{build/figures/ac.pgf}};
+		\node[anchor=north west,inner sep=0pt] (b) at (4.2,0) {\input{build/figures/activity_distribution.pgf}};
+		\node[anchor=north west,inner sep=0pt] (c) at (8.5,0) {\input{build/figures/activity.pgf}};
+		\node[anchor=north west,inner sep=0pt] (d) at (13.6,0) {\input{build/figures/timescale_comparison.pgf}};
+		\node at ($(a.north west) + (0.2,-0.2)$) {\textbf{A}};
+		\node at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+		\node at ($(c.north west) + (0.2,-0.2)$) {\textbf{C}};
+		\node at ($(d.north west) + (0.2,-0.2)$) {\textbf{D}};
+
+		\draw[-latex,ultra thick] ($(c.north east) + (0.2,-0.15)$) -- ($(c.south east) + (0.2,0.8)$) node[midway,xshift=0.2cm,rotate=-90] {Bistability};
+	\end{tikzpicture}
+	\caption{%
+		\textbf{Reducing the input strength increases autocorrelation of network rate through emergent bistability.}
+        \mbox{\textbf{(A)} For} low input rates $h$, the population activity exhibits exponentially shaped autocorrelations $C(t')$ with autocorrelation times $\tau_\mathrm{AC}$ significantly exceeding the largest single neuron timescale.
+		\textbf{(B)} In this regime, the distribution $P(\nu)$ of the population rate $\nu$ shows a bimodal trend.
+		\textbf{(C)} The associated phases of high and low $\nu$ can be fitted by a two state \acrshort{hmm}.
+		\textbf{(D)} Based on the transition rates of this \acrshort{hmm}, an equivalent timescale $\tau_\mathrm{HM}$ can be estimated which coincides with $\tau_\mathrm{AC}$ for low $h$.
+	}
+	\label{fig:time_scale}
+\end{figure*}
+
+More important is the observation that, as shown in \cref{fig:chip}G, the mean coupling weights $w^\mathrm{rec}$ increase almost linearly with decreasing input rate.
+%In addition to the observed heterogeneity, we clearly find that the mean inhibitory and excitatory weights increase almost linearly with reducing the input rate (\cref{fig:chip}G).
+A fit of the form
+\begin{equation}\label{eq:w-h}
+    \langle w^\mathrm{rec}\rangle(h) = \alpha - \beta h,
+\end{equation}
+where $\langle.\rangle$ stands for average across synaptic connections over either excitatory or inhibitory populations, yields $\alpha\approx\SI{22.75}{}$ and $\beta\approx\SI{14.23}{}$ for excitatory or $\alpha\approx\SI{26.1}{}$ and $\beta\approx\SI{16.7}{}$ for inhibitory weights.
+Hence, a reduction in input rate clearly strengthens the recurrent connections in homeostatically regulated \gls{ei} networks consistent with the theoretical consideration that the loss of external input needs to be compensated by recurrent activity generation in order to maintain a constant firing rate~\cite{zierenberg_homeostatic_2018}.
+
+
+
+% E-I balance
+In addition to supporting general theoretical arguments, our setup allows us to investigate how our homeostatic self-organization affects the interplay between excitatory and inhibitory neurons.
+In fact, it is quite surprising that the mean coupling weights for excitatory and inhibitory weights are so similar (\cref{fig:chip}G), i.e., $\langle w^\mathrm{rec}_\mathrm{inh} \rangle \approx \langle w^\mathrm{rec}_\mathrm{exc}\rangle$, given that each neuron receives four times more input from excitatory than from inhibitory neurons.
+Naively, this implies strong excitation dominance in contrast to the expected inhibition dominance required for asynchronous irregular activity~\cite{vreeswijk_chaos_1996,brunel_dynamics_2000} to reproduce experimental single-neuron statistics~\cite{burns_spontaneous_1976, softky_highly_1993, stevens_input_1998, stein_neuronal_2005}.
+This outcome can, however, be explained by our symmetric plasticity rule that does not distinguish between excitatory and inhibitory synapses and thereby fosters solutions with $\langle w^\mathrm{rec}_\mathrm{inh} \rangle \approx \langle w^\mathrm{rec}_\mathrm{exc}\rangle$.
+For small networks with homogeneous weights (see \cref{sec:phase_diagrams}), the condition $w^\mathrm{rec}_\mathrm{inh} \approx w^\mathrm{rec}_\mathrm{exc}$ turns out to be in the vicinity of a phase transition between regular (high-firing) and irregular (low-firing) dynamics.
+Reducing $h$ makes this transition more abrupt and closer to $w^\mathrm{rec}_\mathrm{inh} = w^\mathrm{rec}_\mathrm{exc}$, implying that homeostatic plasticity regulates \gls{ei} networks towards a regular-to-irregular transition when decreasing the external input rate.
+
+% now theoretical prediction of increasing autocorrelation time
+\subsection{Homeostatically regulated neuromorphic hardware with low external input generates large autocorrelation times through emergent bistability}
+
+Next, we verify the theoretical prediction~\cite{zierenberg_homeostatic_2018} that a homeostatically regulated system exhibits an increased autocorrelation to compensate for a decreasing external input (\cref{fig:time_scale}).
+For this, we consider a network after homeostatic development with fixed weights and evaluate the autocorrelation function of the population firing rate $\nu(t)$ over an interval of $T=\SI{100}{\second}$.
+Indeed, the autocorrelation functions, $C(t^\prime)$, show increasingly long tails with decreasing input rate $h$ (\cref{fig:time_scale}A).
+Moreover, they are well described by exponential decays, $C(t^\prime)=e^{-t^\prime/\tau_\mathrm{AC}}$, with increasing autocorrelation times $\tau_\mathrm{AC}$ for decreasing $h$ (\cref{fig:time_scale}A inset).
+While this general trend has been reported for much smaller neuromorphic systems before~\cite{cramer_control_2020}, the inset of Fig.~\ref{fig:time_scale}A reveals the emergence of two distinct regimes.
+For $h>\SI{0.8}{\kilo\hertz}$, we find autocorrelation times to saturate with increasing $h$, suggesting that the uncorrelated Poisson input successfully decorrelates already weakly correlated activity, giving rise to an \textit{input-driven regime}.
+In contrast, for $h<\SI{0.8}{\kilo\hertz}$, we find an apparent divergence of $\tau_\mathrm{AC}$ with decreasing $h$, such that this regime is characterized by dominant recurrent activation compensating for the lacking input, which results in increasing autocorrelation times for decreasing $h$, giving rise to a \textit{recurrent-driven regime}.
+
+Surprisingly, we observe that the autocorrelations originate from a bistable population rate (\cref{fig:time_scale}B-D).
+Specifically, the distribution $P(\nu)$ changes from unimodal for higher input strengths to bimodal for lower input strengths (\cref{fig:time_scale}B).
+The latter suggests that the population rate starts to alternate between two distinct states.
+Indeed, close inspection of the time evolution of $\nu(t)$ reveals that for decreasing input strength the population rate switches between a low-rate state and a high-rate state (\cref{fig:time_scale}C), resembling up-and-down states in cortical networks~\cite{wilson_up_2008,stern_spontaneous_1997,cossart_attractor_2003,hidalgo_stochastic_2012}.
+Such a switching behavior is reminiscent of a Markov jump process between states of high- and low-firing rates~\cite{ibe_3_2013}, specifically a two-state \gls{hmm}~\cite{rabiner_introduction_1986}.
+We fitted a two-state \gls{hmm} to the stationary population rate (discretized in steps of $\Delta t$) and obtained a $2\times 2$ Markov matrix.
+%using the Python toolbox hmmlearn~\cite{noauthor_hmmlearnhmmlearn_2022}, which returns a $2\times 2$ Markov matrix for a stationary process.
+Since the rate is stationary, the first eigenvalue is one, $\lambda_1=1$, and the second eigenvalue $\lambda_2$ determines how quickly perturbations decay back to the stationary solution.
+This is related to the autocorrelation time as $\tau_\mathrm{HM}=-\Delta t/ \log{(\lambda_2)}$.
+Indeed, the autocorrelation time of the \gls{hmm} correlates with the autocorrelation time measured from the population rate for small input strengths, where the population rate becomes bistable (\cref{fig:time_scale}D).
+This is fundamentally different from the \textit{a-priori} expected close-to-critical fluctuations~\cite{zierenberg_homeostatic_2018}, which would lead to scale-free avalanches~\cite{beggs_neuronal_2003} for small $h$ that we do not observe (see \cref{sec:avalanches}).
+We thus conclude that the emergent bistability is the underlying mechanism of the large autocorrelation times observed in the population dynamics of homeostatically regulated \gls{ei} networks of \gls{lif} neurons.
+
+
+
+
+
+
+%Instead, the network dynamics are better described as a Markov jump process between states of high- and low-firing rates~\cite{ibe_3_2013}.
+%The population rate can be well approximated by a two-state \gls{hmm}~\cite{rabiner_introduction_1986}.
+%    We fitted a two-state \gls{hmm} to the population rate (discretized in steps of $\Delta t$) using Python toolbox hmmlearn~\cite{noauthor_hmmlearnhmmlearn_2022}, which returns a $2\times 2$ transition matrix.
+%    \textcolor{blue}{TODO: WHY, what is the largest eigenvalue}
+%The second-largest eigenvalue of this matrix, $\lambda_2$, is the autocorrelation time of Markov process, $\tau_\mathrm{HM}=-\Delta t/ \log{(\lambda_2)}$.
+%Indeed, the autocorrelation time of the \gls{hmm} correlates with the autocorrelation time measured from the population rate for small input strengths, where the population rate becomes bistable (\cref{fig:time_scale}D).
+%We thus conclude that the emergent bistability is the underlying mechanism of the large autocorrelation times observed in the population dynamics of homeostatically regulated \gls{ei} networks of \gls{lif} neurons.
+
+\subsection{Computer simulations reveal increasing dynamical barrier of emergent bistability with system size}
+
+Since our neuromorphic hardware only supports networks with up to $512$ \gls{lif} neurons, we use computer simulations to verify the experimental results for increasing network sizes.
+In brief, we parametrize the simulations to match the experimental setup and use the Brian2 Python package to solve the model (for details see \cref{sec:methods}).
+Indeed, we can reproduce the experimental results with our software implementation: We observe comparable bistable activity with similar autocorrelation functions (see Supplemental Material).
+However, while computer simulations in principle allow us to study any system size, they are much less efficient than the neuromorphic emulation.
+It is worth noting that for our application, i.e., homeostatically regulating a network of $N=512$ \gls{lif} neurons for \SI{6000}{\second}, the computer simulation on an Intel Xeon E5-2630v4 (roughly $\SI{100 000}{\second}$ at about $\SI{50}{\watt}$) takes $\mathcal{O}(10^4)$ more time and $\mathcal{O}(10^7)$ more energy compared to the corresponding emulation on BrainScaleS-2 (about $\SI{6}{\second}$ at a power budget of \SI{100}{\milli\watt}).
+
+
+%While on BrainScaleS-2 the emulation of a network with $N=512$ \gls{lif} neurons for \SI{6000}{\second} including homeostatic regulation takes about $\SI{6}{\second}$ at a power budget of \SI{100}{\milli\watt}, a corresponding computer simulation on an Intel Xeon E5-2630v4 amounts to around $\SI{30}{\hour}$ at approximately \SI{50}{\watt}.
+%This makes the emulation much faster and about $10^7$ times more energy efficient than the simulation.
+
+\begin{figure}[t]
+	\centering
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (a) at (0,0) {\input{build/figures/simulation_ac.pgf}};
+		\node[anchor=north west,inner sep=0pt] (b) at (4.2,0) {\input{build/figures/simulation_activity_distribution.pgf}};
+		\node at ($(a.north west) + (0.2,-0.2)$) {\textbf{A}};
+		\node at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+	\end{tikzpicture}
+	\caption{%
+		\textbf{Finite-size scaling of homeostatically regulated \gls{ei} networks with \gls{lif} neurons from computer simulations.}
+		\textbf{(A)} Autocorrelation time $\tau_\mathrm{AC}$ as a function of system size $N$ for different external input rates $h$.
+        One can see a faster than power-law growth for $h<\SI{0.8}{\kilo\hertz}$, while $\tau_\mathrm{AC}$ seems to saturate on the order of the dominant single-neuron timescale (dashed line) for $h>\SI{0.8}{\kilo\hertz}$.
+		\textbf{(B)} Distributions of the population firing rate in windows of $\SI{5}{\milli\second}$ for $h=\SI{0.7}{\kilo\hertz}$ show the bimodal shape remains for increasing $N$.
+		The barrier in between high- and low-firing states grows with $N$.
+    	}
+	\label{fig:sim}
+\end{figure}
+
+Having established that the computer simulation reproduces the experimental results, we can study how the measured autocorrelation time $\tau_\mathrm{AC}$ depends on the network size $N$ (\cref{fig:sim}A).
+Due to the large computational efforts, we focus on four representative input strengths: a low input strength ($h=\SI{0.7}{\kilo\hertz}$) where we observe bistable activity in the experiment, two medium input strengths ($h=\SI{0.8}{\kilo\hertz}$ and $h=\SI{0.9}{\kilo\hertz}$) near the onset of bistability, and a high input strength ($h=\SI{1.0}{\kilo\hertz}$) where the network does not exhibit bistability.
+Only for $h=\SI{0.7}{\kilo\hertz}$, we observe an exponential increase in autocorrelation time with system size that exceeds $\SI{1}{s}$ for the largest $N$.
+Instead, at $h=\SI{0.8}{\kilo\hertz}$ the autocorrelation time appears to grow as a power law, while for even larger values of $h$ the $\tau_\mathrm{AC}$ start to saturate on the order of the dominant single-neuron timescale (dashed line).
+Our numerical results further corroborate the classification into two distinct regimes: A recurrent-driven regime for low input strength with large emergent autocorrelations and the input-driven regime for high input strength with vanishing autocorrelations.
+%The transition between these regimes can be studied in a more systematic way employing finite-size scaling analyses.
+
+To further investigate the origin of the emergent autocorrelations, we study the shape of the probability distribution of local population rates $\nu(t)$ as a function of network size (\cref{fig:sim}B).
+We observe that for low input strength, the bimodal distribution becomes more pronounced with increasing suppression of intermediate population-rate values.
+%TODO: What is with the other two cases...SI!!! but plot
+One can relate the suppression of intermediate rates to a \textit{dynamical barrier} by interpreting the time course of the instantaneous population rates as a trajectory of the dynamical system in the potential $V(\nu) = -\log P(\nu)$.
+This barrier would be analogous to the activation energy in an Arrhenius-type equation, i.e., $r\propto e^{-\Delta V/T}$, such that for a given level of fluctuation $T$ the rate $r$ to transition between low- and high-firing-rate regimes is lowered for increasing barriers $\Delta V$.
+Since the height of this dynamical barrier increases with $N$, this explains the increasing autocorrelation time with system size.
+
+
+\begin{figure}[t]
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (a) at (0,0)  {\input{build/figures/theory_potential.pgf}};
+		\node[anchor=north west,inner sep=0pt] (b) at (4.2,0){\input{build/figures/theory_activity.pgf}};
+		\node at ($(a.north west) + (0.2,-0.2)$) {\textbf{A}};
+		\node at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+	\end{tikzpicture}
+	\caption{%
+        \textbf{Mean-field theory of emergent bistability upon reducing input to homeostatically regulated recurrent network.}
+        Our mean-field theory describes the temporal evolution of the fraction of active neurons, $\rho$, with meta-stable solutions given by the minimum of the potential, \cref{eq:potential}.
+        \textbf{(A)} For suitable parameters ($\tau_\mathrm{MF}=10$, $\alpha=30$, $\beta=15$, $b=25$, $\sigma=50$, $N=512$), the potential exhibits a single minimum for large $h$ but two minima for small $h$.
+        \textbf{(B)} Numeric evaluation of the corresponding stochastic mean-field equation ($\Delta t=10^{-7}$) shows fluctuating dynamics for large $h$ and emergent bistability for low $h$.
+        }
+	\label{fig:theory}
+\end{figure}
+
+
+
+\subsection{Mean-field theory of emergent bistability from fluctuation-induced switching between metastable active and quiescent states}
+
+To qualitatively explain how bistability can emerge in recurrent network with heterogeneous weights, we construct a simple mean-field theory based on the time evolution of a fraction of active neurons at a given time $t$, $\rho(t)$, which can be considered a proxy of the population rate $\nu(t)$ up to some factor.
+Let us consider a general mean-field ansatz
+\begin{align}
+	\dot{\rho}(t) = &-\tau_\mathrm{MF}\rho(t) \nonumber \\
+		&+h  (1-\rho(t)) + \left( 1-\rho(t) \right) \left[ \omega_1\rho(t) + \omega_2\rho^2(t)+\dots\right]\, ,
+\end{align}
+%
+where the first term describes the spontaneous decay of activity in the absence of inputs with some characteristic time scale
+$\tau_\mathrm{MF}$, the term proportional to $h$ represents external input that can only activate inactive neurons (hence the $(1-\rho)$ factor), and the last term represent the gain function that describes recurrent activations, expanded in power-series of the activity.
+Here, the coefficients of expansion ($\omega_1$, $\omega_2$, ...) are an effective representation of the full coupling matrix $w^\mathrm{rec}_{ij}$ (with $\omega_1$ proportional to the mean synaptic strength).
+The mean-field equation can be rewritten in a more compact form by grouping-up terms with different powers of the activity,
+\begin{equation}\label{eq:MF_compact}
+    \dot{\rho}(t) = h - a\rho(t) -b\rho^2(t) + \dots \, ,
+\end{equation}
+%
+where $a=\tau_\mathrm{MF}+h-\omega_1$ and $b=\omega_1-\omega_2>0$ to ensure stability.
+It is important to notice that this mean-field equation assumes infinitely large network sizes, $N\to\infty$, for which additional noise terms vanish.
+
+%finite
+To describe finite networks one needs to introduce an additional stochastic term to the mean-field \cref{eq:MF_compact} that accounts for demographic fluctuations.
+Demographic fluctuations are characteristic of systems with an absorbing or quiescent state~\cite{henkel_absorbing_2008}, where fluctuations of the total number of active units around some mean $N\rho(t)$ are expected to have a standard deviation that scales with $\sqrt{N\rho(t)}$ as a consequence of the central-limit theorem.
+For the fraction of active nodes in a finite network, we then obtain to leading order in system size
+\begin{equation}\label{eq:MF_noise}
+    \dot{\rho}(t) = h - a\rho(t) -b\rho^2(t) + \sqrt{\rho(t)/N}\eta(t)\, ,
+\end{equation}
+where $\eta(t)$ is Gaussian white noise with zero mean and variance $\sigma^2$.
+This (Ito) Langevin equation can be expressed as a Fokker Planck equation, with the steady-state solution~\cite{munoz_nature_1998} (see also SI)
+\begin{equation}
+    P(\rho) = \mathcal{N}\exp\left\{-\frac{2N}{\sigma^2}V(\rho)\right\}\, ,
+\end{equation}
+a normalization constant $\mathcal{N}$, and the potential
+\begin{align}\label{eq:potential}
+    V(\rho) = \left(\frac{\sigma^2}{2N} - h\right)\ln\rho + a\rho + \frac{b}{2}\rho^2\, .
+\end{align}
+This potential $V(\rho)$ can either have a single (formally diverging) minimum at $\rho=0$ (unimodal activity distribution), or it can have two local minima (bistable activity distribution).
+%Specifically, we can find from the condition $\rho\,dV/d\rho=(\frac{\sigma^2}{2N}-h) + a\rho +b\rho^2=0$ extrema at $\rho_\pm = \left(-a\pm\sqrt{a^2-4b(\frac{\sigma^2}{2N}-h)}\right)/2b$ such that a bistable solution occurs when
+The condition for extrema of the potential $V$ imply that a bistable solution occurs when
+%\begin{equation}\label{eq:condition-bistable}
+    $a^2-4b(\frac{\sigma^2}{2N}-h)>0$.
+%\end{equation}
+With the additional conditions for a positive density, i.e., $\rho>0$, as well as a positive slope at $\rho=0$, i.e., $\rho^2\frac{d^2V}{d\rho^2}(0)=(\frac{\sigma^2}{2N}-h)>0$, we expect to observe bistable dynamics for
+\begin{equation}\label{eq:condition-bistable}
+    a<-2\sqrt{b\left(\frac{\sigma^2}{2N}-h\right)}<0.
+\end{equation}
+
+% homeostatic regulation
+To incorporate the effect of training recurrent weights with homeostatic regulation, we recall our empirically obtained anticorrelation, $\langle w \rangle = \alpha - \beta h$, upon homeostatic training (\cref{fig:chip}G).
+In our mean-field theory, \cref{eq:MF_compact}, we assume this to dominantly affect $a=\tau_\mathrm{MF} + h - \omega_1 \approx \tau_\mathrm{MF}  - \alpha + h(1+\beta)$ and make the common assumption that $b=\omega_1-\omega_2$ is constant up to higher-order effects.
+Inserting $a$ into \cref{eq:condition-bistable}, we find that ---for suitable parameters--- lowering $h$ can indeed induce a transition from a unimodal to a bimodal potential (\cref{fig:theory}).
+%Then the condition for a bistable solution, \cref{eq:condition-bistable}, becomes $\tau_\mathrm{MF}-\alpha +h(1+\beta) < -2\sqrt{b(\frac{\sigma^2}{2N}-h)}$ and we find that ---for suitable parameters--- lowering $h$ does indeed induce a transition from a unimodal to a bimodal potential (\cref{fig:theory}).
+
+% stochastic simulations
+The $h$-dependent transition from unimodal to bimodal can be visualized by numerically evaluating the mean-filed model (\cref{fig:theory}B).
+The numerical integration of \cref{eq:MF_noise} is straightforward~\cite{dornic_integration_2005}, but needs special care to avoid running into the domain of negative numbers due to numerical imprecisions (see Appendix~\ref{sec:appendix_meanfield}).
+The resulting trajectories show typical demographic fluctuations for higher inputs and bistable activity for lower input.
+Since the involved parameters are not easily related in an explicit way to the experiment, this theoretical result is a qualitative explanation of the observed effect and all parameters are in arbitrary units.
+
+Our mean-field theory implies that emergent bistable population activity can be rationalized as a fluctuation-induced switching between a metastable active and a quiescent phase.
+For a system with an absorbing to active non-equilibrium phase transition for vanishing input, we find that finite-size fluctuations are responsible for a metastable active state (high rate) and external fluctuations lead to a metastable quiescent state (low rate).
+To transit from one state to another, the system needs to overcome a dynamical barrier, where the transition from high-to-low rate requires demographic noise, whereas the transition from low-to-high rate requires external noise.

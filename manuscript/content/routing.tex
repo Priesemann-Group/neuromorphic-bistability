@@ -1,0 +1,93 @@
+\definecolor{blue}{HTML}{1f77b4}%
+\definecolor{red}{HTML}{d62728}%
+\definecolor{green}{HTML}{2ca02c}%
+\definecolor{yellow}{HTML}{fee23e}%
+\definecolor{hidden}{HTML}{005b82}%
+\definecolor{input}{HTML}{af5a50}%
+\definecolor{ppu}{HTML}{7d966e}%
+\definecolor{output}{HTML}{555555}%
+\tikzset{silent/.style={cross out, draw, 
+         minimum size=2*(3pt-\pgflinewidth), 
+	 inner sep=0pt, outer sep=0pt, thick}}
+\tikzset{input_synapse/.style={circle,minimum size=0.17cm,inner sep=0pt,fill=input}}%
+\tikzset{recurrent0_synapse/.style={circle,minimum size=0.17cm,inner sep=0pt,fill=hidden}}%
+\tikzset{recurrent1_synapse/.style={circle,minimum size=0.17cm,inner sep=0pt,fill=output}}%
+\pgfmathdeclarerandomlist{MyRandomSynapses}{%
+    {input_synapse}%
+    {recurrent0_synapse}%
+    {recurrent1_synapse}%
+    {silent}%
+}%
+\tikzset{block/.style={font={\rmfamily\footnotesize},align=center}}%
+\tikzset{box/.style={draw=black!90}}%
+\tikzset{block label/.style={fill=white,font={\rmfamily\footnotesize},inner sep=0.05cm}}%
+\tikzset{%
+	neuron/.style = {%
+		draw=black,%
+		circle,%
+		inner sep=0pt,%
+		minimum width=0.3cm%
+	},%
+	driver/.style = {%
+		minimum height=0.7cm,%
+		draw=black,%
+		regular polygon,%
+		regular polygon sides=3,%
+		shape border rotate=-90,%
+		inner sep=0pt%
+	},%
+}%
+%
+\begin{tikzpicture}[
+		x=1.7cm,
+		y=1.7cm,
+	    	anchor=center,
+        ]
+        \pgfdeclarelayer{background layer}
+        \pgfsetlayers{background layer,main}
+        % \draw[use as bounding box,inner sep=0pt,draw=none] (-0.1,0.0) rectangle ++(5.5,4.5);
+
+	\begin{scope}
+		\foreach \x in {0,1,...,7} {
+			\pgfmathparse{100*(\x>3)}
+			\colorlet{currentcolor}{output!\pgfmathresult!hidden}
+			
+			\node[neuron,currentcolor,thick,inner sep=1pt] (nrn \x) at (0.8 + \x*0.5,0.35) {\fontsize{8}{8}\selectfont $t_\x^k$};
+			\draw[stealth-] (nrn \x.north) ++ (0.0,0.01) -- ++(0.0,1.85);
+		}
+
+		\foreach \y [evaluate=\y as \z using {int(\y + 4)}] in {0,1,...,3} {
+			\node[driver,thick] (drv \y) at ($(nrn 0) + (-0.5,0.5 + \y*0.5)$) {};
+			\draw (drv \y.east) -- ++(3.8,0.0);
+			\draw[stealth-,input,thick] ($(drv \y.center) + (-0.11,0.10)$) -- ++(-0.25,0.0) node[anchor=east] {\fontsize{8}{8}\selectfont $s_\y^l$};
+
+			\foreach \x in {0,1,...,7} {
+				\pgfmathrandomitem{\RandomSynapse}{MyRandomSynapses}
+				\draw (drv \y -| nrn \x) node[\RandomSynapse] {};
+			}
+		}
+
+		% routing
+		\foreach \x in {0,1,2,3} {
+			\draw[hidden,thick] (nrn \x.south) -- ++(0.0,-0.1) coordinate (tmp) -- (tmp -| drv 0.west) -- ++(-0.14,0.0) coordinate (sammelpunkt);
+		}
+		
+		\foreach \y in {0,1,...,3} {
+			\draw[-stealth,hidden,thick] (sammelpunkt) -- ($(sammelpunkt |- drv \y) + (0.0,0.00)$) coordinate (tmp) -- (tmp -| drv \y.west);
+		}
+		
+		\foreach \x in {4,5,6,7} {
+			\draw[output,thick] (nrn \x.south) -- ++(0.0,-0.16) coordinate (tmp) -- (tmp -| drv 0.west) -- ++(-0.2,0.0) coordinate (sammelpunkt);
+		}
+		
+		\foreach \y in {0,1,...,3} {
+			\draw[-stealth,output,thick] (sammelpunkt) coordinate (tmp) -- ($(tmp |- drv \y) - (0.0,0.1)$) coordinate (tmp) -- (tmp -| drv \y.west);
+		}
+
+		% ppu
+		\node[rectangle,thick,draw,ppu,rounded corners,inner sep=2pt,minimum width=6.5cm] (ppu) at ($(nrn 0) + (1.9,2.7)$) {\fontsize{8}{8}\selectfont PPU};
+		\foreach \x in {0,1,...,7} {
+			\draw[ppu,-stealth] (nrn \x.55) -- ++(55:0.12) coordinate (tmp) -- (tmp |- ppu.south) node[pos=0.85, fill=white, inner sep=1] {\fontsize{8}{8}\selectfont $\nu_\x$};
+		}
+	\end{scope}
+\end{tikzpicture}

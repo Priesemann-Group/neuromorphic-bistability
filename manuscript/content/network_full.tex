@@ -1,0 +1,47 @@
+\begin{tikzpicture}
+	\newcommand{\drawspiketrain}[2]{%
+		\foreach \i in {0,1,...,200} {
+			\pgfmathparse{int(random(0, 100)/1.0)}
+			\ifnum \numexpr\pgfmathresult > \numexpr100-#1
+				\draw[draw=black] #2 ++ (\i*0.0035,0.0) -- ++(0,0.15);
+			\fi
+		}
+	}
+	\newcommand{\drawinput}[2]{%
+		\drawspiketrain{#1}{#2 ++ (0,-0.0)}
+		\drawspiketrain{#1}{#2 ++ (0,-0.2)}
+		\drawspiketrain{#1}{#2 ++ (0,-0.8)}
+		\drawspiketrain{#1}{#2 ++ (0,-1.0)}
+		\draw[thick,densely dotted] #2 ++ (0.375,-0.325) -- ++(0.0,-0.18);
+	}
+
+	\pgfmathsetseed{42}
+	\node[anchor=center,inner sep=0pt] (net 0) at (-2,-1.0) {\input{content/network_small}};
+	\node[anchor=center,inner sep=0pt] (net 1) at (-2,-3.0) {\input{content/network_small}};
+	\node[anchor=center,inner sep=0pt] (net 2) at (-2,-7.0) {\input{content/network_small}};
+	\node[anchor=center,inner sep=0pt] (net 3) at (-2,-9.0) {\input{content/network_small}};
+
+	\begin{scope}[local bounding box=spikes1]
+		\drawinput{5}{(-5.3,-1.8)};
+	\end{scope}
+	\begin{scope}[local bounding box=spikes2]
+		\drawinput{5}{(-5.3,-3.3)};
+	\end{scope}
+	\begin{scope}[local bounding box=spikes3]
+		\drawinput{5}{(-5.3,-6)};
+	\end{scope}
+	\begin{scope}[local bounding box=spikes4]
+		\drawinput{5}{(-5.3,-7.5)};
+	\end{scope}
+	\draw [thick,decorate,decoration={brace,amplitude=5pt}] ($(spikes1.north east)+(0.1,0.0)$) -- ($(spikes1.south east)+(0.1,0.0)$) node[midway,right=5pt] (brace1) {};
+	\draw [thick,decorate,decoration={brace,amplitude=5pt}] ($(spikes2.north east)+(0.1,0.0)$) -- ($(spikes2.south east)+(0.1,0.0)$) node[midway,right=5pt] (brace2) {};
+	\draw [thick,decorate,decoration={brace,amplitude=5pt}] ($(spikes3.north east)+(0.1,0.0)$) -- ($(spikes3.south east)+(0.1,0.0)$) node[midway,right=5pt] (brace3) {};
+	\draw [thick,decorate,decoration={brace,amplitude=5pt}] ($(spikes4.north east)+(0.1,0.0)$) -- ($(spikes4.south east)+(0.1,0.0)$) node[midway,right=5pt] (brace4) {};
+	\draw [thick,decorate,decoration={brace,amplitude=5pt,mirror}] ($(spikes1.north west)+(-0.2,0.0)$) -- ($(spikes4.south west)+(-0.2,0.0)$) node[midway,left=15pt,rotate=90,anchor=center] {Input};
+	\draw[-latex,very thick] (brace1) to[out=15,in=180,looseness=1.4] (net 0);
+	\draw[-latex,very thick] (brace2) to[out=5,in=180,looseness=1.4] (net 1);
+	\draw[-latex,very thick] (brace3) to[out=-5,in=180,looseness=1.4] (net 2);
+	\draw[-latex,very thick] (brace4) to[out=-15,in=180,looseness=1.4] (net 3);
+	\draw[thick,dotted] (-2,-4.5) -- (-2,-5.5);
+	\draw[thick,dotted] (-5.125,-4.8) -- (-5.125,-5.2);
+\end{tikzpicture}

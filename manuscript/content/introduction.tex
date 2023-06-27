@@ -1,0 +1,89 @@
+\section{\label{sec:introduction}Introduction}
+
+% Neuromorphic computing as context to introduce concept of memory within the dynamics
+Neuromorphic computing covers a variety of brain-inspired computers, devices, and models that function fundamentally different to common von-Neumann architectures~\cite{schuman_survey_2017-1, furber_large-scale_2016}.
+For instance, one can \emph{emulate} the dynamics of neuron membrane potentials and synaptic currents in analog electronic circuits~\cite{schemmel_modeling_2007, schemmel_wafer-scale_2010, friedmann_demonstrating_2017, moradi_scalable_2018, benjamin_neurogrid_2014}.
+In general, the hardware-specific information processing and storage calls for hand-in-hand development of hardware and corresponding algorithms, which can be guided by modern artificial intelligence and neuroscience likewise~\cite{markovic_physics_2020}.
+A complementary approach is to build customizable, large-scale neuromorphic architectures that can implement brain-inspired plasticity for self-organization, for instance BrainScaleS~\cite{pehle_brainscales-2_2022} or Loihi~\cite{davies_loihi_2018}.
+These devices can exhibit diverse emergent population dynamics that depend, among others, on model parameters, plasticity, or network architecture and that may be useful for future developments in neuromorphic computing.
+For instance, emergent temporal correlations imply information integration over time that can be important for understanding sequential input like language, i.e., integrating syllables to words, to sentence to meaning~\cite{hasson_hierarchical_2015, rudelt_embedding_2021, cramer_heidelberg_2022}.
+%TODO: Lucas new paper
+Understanding emergent timescales in neural networks is thus among the basic prerequisites for designing recurrent neural language processing models from scratch.
+
+%Understanding these emergent dynamics and what controls them is a basic prerequisite for desig 
+
+%Information integration over time can be important for understanding sequential input like language, i.e., integrating szlibils tow orkds, to sentence to meaning. Therefore understanding neural networks like this one is basic prerquisite for designing recurrent neural language processing models from scratch.
+
+
+
+%will add to the foundation for future developments in neuromorphic computing.
+
+% Homeostatic plasticity
+Recent theoretical and experimental results have emphasized the importance of homeostatic plasticity to shape the timescales of neural population dynamics~\cite{zierenberg_homeostatic_2018, kossio_growing_2018, ma_cortical_2019}.
+Homeostatic plasticity is a negative feedback that adapts local neural properties to achieve a stable firing rate~\cite{turrigiano_activity-dependent_1998, turrigiano_homeostatic_2004, turrigiano_homeostatic_2012}.
+For homeostatically regulated excitable systems, one can prove analytically that lowering the input strength induces an increase in the recurrent coupling and hence increases the autocorrelation time through close-to-critical fluctuations~\cite{zierenberg_homeostatic_2018, kossio_growing_2018}.
+These predictions are consistent with experiments on monocular deprivation, where partial reduction of input initially disrupts population activity before homeostatic plasticity tunes cortical networks back towards criticality~\cite{ma_cortical_2019}.
+Moreover, they provide a potential explanation for the experimentally observed increase of autocorrelation time along the hierarchical anatomy of cortex~\cite{murray_hierarchy_2014, hasson_hierarchical_2015, raut_hierarchical_2020, spitmaan_multiple_2020, gao_neuronal_2020, siegle_survey_2021}: timescales are shorter in primary sensory regions and longer in higher-order cortical regions.
+In the context of neuromorphic computing, homeostatic plasticity was shown to serve as a guiding principle to tune neuromorphic hardware for optimal task performance~\cite{cramer_control_2020}.
+
+%
+However, empirical observations of large, emergent autocorrelations seem to contradict prior theoretical predictions for networks of \gls{ei} \gls{lif} neurons.
+While empirical estimates of neural autocorrelation times range from $\mathcal{O}(\SI{10}{ms})$ to $\mathcal{O}(\SI{1}{s})$~\cite{murray_hierarchy_2014, hasson_hierarchical_2015, raut_hierarchical_2020, spitmaan_multiple_2020, gao_neuronal_2020, siegle_survey_2021, wasmuht_intrinsic_2018, cavanagh_reconciling_2018, wilting_operating_2018, wilting_between_2019}, early theories and models of networks of \gls{lif} neurons in an \gls{ei} balanced state \cite{vreeswijk_chaos_1996,renart_asynchronous_2010} predict almost vanishing mean correlations.
+Instead, more recent reassessments find conditions under which larger correlations can emerge~\cite{harish_asynchronous_2015, rosenbaum_spatial_2017, mastrogiuseppe_intrinsically-generated_2017, baker_correlated_2019} (see also Ref.~\cite{latham_correlations_2017, dahmen_global_2022} for overviews).
+Focusing on temporal correlations, recent developments in dynamic mean-field theory~\cite{ostojic_two_2014, mastrogiuseppe_intrinsically-generated_2017, van_meegen_microscopic_2021} reveal parameter ranges with larger emergent autocorrelation times.
+However, these autocorrelation times were still on the order of characteristic times of membrane potential or synaptic current, which are typically $\mathcal{O}(\SI{10}{ms})$, and thus distinctively below the ones observed experimentally.
+
+In this work, we study emergent collective dynamics and autocorrelation times in networks of excitatory and inhibitory \gls{lif} neurons emulated on the BrainScaleS neurmorphic system.
+This system provides large flexibility for programmable plasticity rules~\cite{pehle_brainscales-2_2022} and hence allows for homeostatic plasticity during a training phase.
+We verify that training with reduced external input strength induces increasing autocorrelation times in the test phase that can be more than 20 times larger than the decay time of the membrane potential of individual units.
+Since we are using the BrainScaleS-2 single chip, which is limited to 512 Neurons, we complement our experiments with a numerical finite-size scaling analysis that reveals progressively larger autocorrelation times with increasing system size.
+Surprisingly, we find that in our setup autocorrelations are not generated by close-to-critical fluctuations~\cite{zierenberg_homeostatic_2018}, but originate from an emergent bistability in the population firing rate.
+To explain this bistability, we derive a simple mean-field theory for driven excitable systems that reveals a fluctuation-induced switching between a metastable active phase and a quiescent phase, reminiscent of so-called \emph{up and down} states in brain networks~\cite{wilson_up_2008,stern_spontaneous_1997,cossart_attractor_2003,hidalgo_stochastic_2012}.
+We finish with a discussion of how emergent bistability can affect biological and artificial neural networks, as well as other finite systems with an absorbing-to-active transition that are driven by external noise.
+
+
+
+
+
+% Memory in neuroscience connected to autocorrelation times
+
+%Empirical work from neurophysiology and neuroimaging suggests that neural circuits implement process memory as active traces of past information~\cite{hasson_hierarchical_2015}.
+%One measure of the extend over which information can be accumulated is the processing timescale, which has been related to the autocorrelation time of collective neural dynamics~\cite{murray_hierarchy_2014, hasson_hierarchical_2015}.
+%It was found that the autocorrelation time is related to the hierarchical anatomy of cortex~\cite{murray_hierarchy_2014, hasson_hierarchical_2015, raut_hierarchical_2020, spitmaan_multiple_2020, gao_neuronal_2020, siegle_survey_2021}: timescales are shorter in primary sensory regions and longer in higher-order cortical regions.
+%In fact, empirical observations of autocorrelation times in neural recordings range from $\mathcal{O}(\SI{10}{ms})$ to $\mathcal{O}(\SI{1}{s})$~\cite{murray_hierarchy_2014, hasson_hierarchical_2015, raut_hierarchical_2020, spitmaan_multiple_2020, gao_neuronal_2020, siegle_survey_2021, wasmuht_intrinsic_2018, cavanagh_reconciling_2018, wilting_operating_2018, wilting_between_2019}.
+%This seems to contradict prior theoretical predictions for networks of \gls{ei} \gls{lif} neurons, where early theories and models of networks of \gls{lif} neurons in an \gls{ei} balanced state \cite{vreeswijk_chaos_1996,renart_asynchronous_2010} predict almost vanishing mean correlations, though more recent reassessments found conditions under which much larger correlations can appear~\cite{rosenbaum_spatial_2017, mastrogiuseppe_intrinsically-generated_2017, baker_correlated_2019}, see also Ref.~\cite{latham_correlations_2017, dahmen_global_2022} for an overview.
+%Focusing on temporal correlations, recent developments in dynamic mean-field theory~\cite{ostojic_two_2014, mastrogiuseppe_intrinsically-generated_2017, van_meegen_microscopic_2021} reveal parameter ranges with emergent autocorrelation times larger, but still on the order of the characteristic time of the membrane potential, typically $\mathcal{O}(\SI{10}{ms})$, which is still far below the ones observed experimentally.
+%
+%% self-organization
+%This raises the question whether the emergence of large autocorrelation times requires additional mechanisms of self-organization.
+%A generic mechanism of neural self-organisation is \emph{homeostatic plasticity}, a negative feedback that adapts local neural properties to achieve a stable firing rate~\cite{turrigiano_activity-dependent_1998, turrigiano_homeostatic_2004, turrigiano_homeostatic_2012}.
+%For homeostatically regulated excitable systems, one can prove analytically that lowering the input strength induces an increase in the recurrent coupling and hence in the autocorrelation time through close-to-critical fluctuations~\cite{zierenberg_homeostatic_2018}.
+%These predictions are consistent with experiments on monocular deprivation~\cite{ma_cortical_2019} and with the hierarchy of timescales~\cite{murray_hierarchy_2014, hasson_hierarchical_2015, raut_hierarchical_2020, spitmaan_multiple_2020, gao_neuronal_2020, siegle_survey_2021}, and have been applied as a guiding principle to tune neuromorphic hardware for optimal task performance~\cite{cramer_control_2020}.
+%However, it so far remains unknown whether close-to-critical fluctuations are responsible for emergent autocorrelations in homeostatic regulated \gls{ei}  networks of \gls{lif} neurons, or whether there could be alternative mechanisms.
+%
+%homeostatic adaptation
+%One way a neural network can self-regulate its dynamics to task requirements is through \emph{homeostatic plasticity}.
+%Homeostatic plasticity is a negative feedback that adapts local neural properties to achieve a stable firing rate~\cite{turrigiano_activity-dependent_1998, turrigiano_homeostatic_2004, turrigiano_homeostatic_2012}.
+%One can prove analytically for homeostatically regulated excitable systems that lowering the input strength induces an increase in the recurrent coupling and hence in the autocorrelation time through close-to-critical fluctuations~\cite{zierenberg_homeostatic_2018}.
+%Despite being a simplified framework, these predictions are consistent with experiments on monocular deprivation~\cite{ma_cortical_2019} and the above noted hierarchy of timescales~\cite{murray_hierarchy_2014, hasson_hierarchical_2015, raut_hierarchical_2020, spitmaan_multiple_2020, gao_neuronal_2020, siegle_survey_2021}.
+%Moreover, it has been shown that a comparable mechanism can be exploited to tune a neuromorphic chip, emulating a network of \gls{ei} \gls{lif} neurons subject to a variant of spike-timing dependent plasticity, for optimal task performance~\cite{cramer_control_2020}.
+%
+% the problem
+%However, the empirical observations of large autocorrelation times in neural recordings~\cite{murray_hierarchy_2014, raut_hierarchical_2020, wasmuht_intrinsic_2018, cavanagh_reconciling_2018, kim_strong_2021} seem to contradict prior theoretical predictions for networks of \gls{ei} \gls{lif} neurons.
+%Early theories and models of networks of \gls{lif} neurons~ in a \gls{ei} balanced state \cite{vreeswijk_chaos_1996,renart_asynchronous_2010}, predicted almost vanishing mean correlations, though more recent reassessments found conditions under which much larger correlations can appear~\cite{rosenbaum_spatial_2017, mastrogiuseppe_intrinsically-generated_2017, baker_correlated_2019}, see also Ref.~\cite{latham_correlations_2017, dahmen_global_2022} for an overview.
+%Focusing on temporal correlations, recent developments in dynamic mean-field theory~\cite{ostojic_two_2014, mastrogiuseppe_intrinsically-generated_2017, van_meegen_microscopic_2021} reveal parameter ranges with emergent autocorrelation times on the order of the characteristic time of the membrane potential.
+%Thereby, such theoretically possible autocorrelation times are still far below the ones observed experimentally.
+
+%It is thus necessary to (i) verify that  large autocorrelation times can emerge in networks of \gls{ei} \gls{lif} neurons and to (ii) develop a theoretical understanding of their origin.
+%Here, we address these open questions using the experimental setup of a neuromorphic chip with homeostatic plasticity during development.
+%We verify that reducing the external input strength induces increasing autocorrelation times that can be more than 20 times larger than the decay time of the membrane potential of individual units.
+%We complement our size-constrained experiments with a numerical finite-size scaling analysis that reveals progressively larger autocorrelation times for increasing system sizes.
+%Surprisingly, we find that in our case autocorrelations are not generated by close-to-critical fluctuations~\cite{zierenberg_homeostatic_2018}, but originate from an emergent bistability in the population firing rate.
+%To explain this bistability, we derive a mean-field theory for driven excitable systems that reveals a fluctuation-induced switching between a metastable active phase and a quiescent phase, reminiscent of so-called \emph{up and down} states in brain networks~\cite{wilson_up_2008,stern_spontaneous_1997,cossart_attractor_2003,hidalgo_stochastic_2012}.
+%We finish with a discussion of how emergent bistability can affect biological and artificial neural networks, as well as other finite systems with an absorbing-to-active transition that are driven by external noise.
+
+%Finally, we show that such a bistability leads to a dynamic barrier that can be exploited to discriminate different stimuli of varying strength even much after stimulus offset, paving the way to applications that require implicit working memory.
+
+
+%To study emergent autocorrelation in homeostatic spiking neural networks, we devise experiments on neuromorphic hardware that due to its acceleration and low energy consumption provide us with a lot of statistics in short time at low energy cost.
+%These experiments are confined to the neurorphic hardware with 512 neurons, so that we complement them by a finite-size scaling analysis with increasing system size simulated on high-performance compute clusters for selected parameters.\section{\label{sec:introduction}Introduction}

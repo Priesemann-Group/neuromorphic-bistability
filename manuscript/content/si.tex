@@ -1,0 +1,213 @@
+
+\begin{figure*}[t]
+	\centering
+	\scalebox{0.82}{
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (a) at (0,0) {\input{build/figures/si_emul_final_rate.pgf}};
+		\node[anchor=north west,inner sep=0pt] (b) at (0,-4.1) {\input{build/figures/si_sim_offset_final_rate.pgf}};
+		\node[anchor=north west,inner sep=0pt] (c) at (0,-8.2) {\input{build/figures/si_sim_final_rate.pgf}};
+
+		\node[anchor=north west,inner sep=0pt] (d) at (4.1,0) {\input{build/figures/si_emul_weight_histogram.pgf}};
+		\node[anchor=north west,inner sep=0pt] (e) at (4.1,-4.1) {\input{build/figures/si_sim_offset_weight_histogram.pgf}};
+		\node[anchor=north west,inner sep=0pt] (f) at (4.1,-8.2) {\input{build/figures/si_sim_weight_histogram.pgf}};
+
+		\node[anchor=north west,inner sep=0pt] (g) at (12.4,0) {\input{build/figures/si_emul_connectivity.pgf}};
+		\node[anchor=north west,inner sep=0pt] (h) at (12.4,-4.1) {\input{build/figures/si_sim_offset_connectivity.pgf}};
+		\node[anchor=north west,inner sep=0pt] (i) at (12.4,-8.2) {\input{build/figures/si_sim_connectivity.pgf}};
+
+		\node[anchor=north west,inner sep=0pt] (j) at (16.5,0) {\input{build/figures/si_emul_average_weight.pgf}};
+		\node[anchor=north west,inner sep=0pt] (k) at (16.5,-4.1) {\input{build/figures/si_sim_offset_average_weight.pgf}};
+		\node[anchor=north west,inner sep=0pt] (l) at (16.5,-8.2) {\input{build/figures/si_sim_average_weight.pgf}};
+
+		\node[rotate=90] (label0) at ($(j.east) + (0.7, 0.0)$) {\normalsize\bfseries Emulation};
+		\node[rotate=90] (label1) at ($(k.east) + (0.7, 0.0)$) {\normalsize\bfseries Simulation (offset)};
+		\node[rotate=90] (label2) at ($(l.east) + (0.7, 0.0)$) {\normalsize\bfseries Simulation};
+
+		\node at ($(a.north west) + (0.2,-0.2)$) {\textbf{A}};
+		\node at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+		\node at ($(c.north west) + (0.2,-0.2)$) {\textbf{C}};
+		\node at ($(d.north west) + (0.2,-0.2)$) {\textbf{D}};
+		\node at ($(e.north west) + (0.2,-0.2)$) {\textbf{E}};
+		\node at ($(f.north west) + (0.2,-0.2)$) {\textbf{F}};
+		\node at ($(g.north west) + (0.2,-0.2)$) {\textbf{G}};
+		\node at ($(h.north west) + (0.2,-0.2)$) {\textbf{H}};
+		\node at ($(i.north west) + (0.2,-0.2)$) {\textbf{I}};
+		\node at ($(j.north west) + (0.2,-0.2)$) {\textbf{J}};
+		\node at ($(k.north west) + (0.2,-0.2)$) {\textbf{K}};
+		\node at ($(l.north west) + (0.2,-0.2)$) {\textbf{L}};
+
+		\begin{pgfonlayer}{background}
+			\node[inner sep=6pt,rounded corners,fill=nicegreen!20,fit=(a) (label0)] (emulation) {};
+			\node[inner sep=6pt,rounded corners,fill=nicered!20,fit=(b) (label1)] (simulation_offset) {};
+			\node[inner sep=6pt,rounded corners,fill=niceblue!20,fit=(c) (label2)] (simulation) {};
+		\end{pgfonlayer}
+	\end{tikzpicture}
+}
+	\caption{%
+		\textbf{Software simulations validate the neuromorphic emulation on BrainScaleS-2.}
+		The panels \textbf{(A)}, \textbf{(D)}, \textbf{(G)} and \textbf{(J)} show the emulation results already presented in \cref{main-fig:chip} in the main part of this manuscript.
+		The panels \textbf{(B)}, \textbf{(E)}, \textbf{(H)} and \textbf{(K)} illustrate the results of corresponding software simulations incorporating the amplitude offset within the synaptic currents present on the neuromorphic system, whereas \textbf{(C)}, \textbf{(F)}, \textbf{(I)} and \textbf{(L)} depict the simulation data acquired for ideal dynamics and hence without offset.
+	}
+	\label{fig:simulation_comparison_homeostasis}
+\end{figure*}
+
+\section{Validation of the analog emulation \label{sec:validation}}
+
+Equivalent software simulations validate the main results on bistability in \gls{ei} networks of \gls{lif} neurons emulated on the analog BrainScaleS-2 system.
+In the following, we very the emulation by first comparing to an accurate software simulation incorporating the offset in the synaptic current shown in \cref{main-fig:parametrization} G and H.
+Most importantly, our results do not depend on the latter and persist for ideal synaptic dynamics.
+
+The firing rates (\cref{fig:simulation_comparison_homeostasis} A, B and C), the histograms of synaptic weights (\cref{fig:simulation_comparison_homeostasis} D, E and F), the effective connectivity (\cref{fig:simulation_comparison_homeostasis} G, H and I) as well as the average synaptic weights (\cref{fig:simulation_comparison_homeostasis} J, K and L) are comparable for emulation and both simulation conditions.
+However, for high input strengths, the firing rate $\nu$ of simulated networks exceeds the target rate.
+Likewise, the effective connectivity and the average synaptic weights are slightly higher on the BrainScaleS-2 chip compared to the simulation.
+This hints towards an overestimation of the \gls{psp} height on hardware which is most likely due to saturation effects promoted by the analog implementation.
+
+\begin{figure*}[t]
+	\centering
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (a) at (0,0) {\input{build/figures/si_emul_ac.pgf}};
+		\node[anchor=north west,inner sep=0pt] (b) at (0,-4.1) {\input{build/figures/si_sim_offset_ac.pgf}};
+		\node[anchor=north west,inner sep=0pt] (c) at (0,-8.2) {\input{build/figures/si_sim_ac.pgf}};
+
+		\node[anchor=north west,inner sep=0pt] (d) at (4.0,0) {\input{build/figures/si_emul_activity_distribution.pgf}};
+		\node[anchor=north west,inner sep=0pt] (e) at (4.0,-4.1) {\input{build/figures/si_sim_offset_activity_distribution.pgf}};
+		\node[anchor=north west,inner sep=0pt] (f) at (4.0,-8.2) {\input{build/figures/si_sim_activity_distribution.pgf}};
+
+		\node[anchor=north west,inner sep=0pt] (g) at (8.0,0) {\input{build/figures/si_emul_activity.pgf}};
+		\node[anchor=north west,inner sep=0pt] (h) at (8.0,-4.1) {\input{build/figures/si_sim_offset_activity.pgf}};
+		\node[anchor=north west,inner sep=0pt] (i) at (8.0,-8.2) {\input{build/figures/si_sim_activity.pgf}};
+
+		\node[anchor=north west,inner sep=0pt] (j) at (12.4,0) {\input{build/figures/si_emul_timescale_comparison.pgf}};
+		\node[anchor=north west,inner sep=0pt] (k) at (12.4,-4.1) {\input{build/figures/si_sim_offset_timescale_comparison.pgf}};
+		\node[anchor=north west,inner sep=0pt] (l) at (12.4,-8.2) {\input{build/figures/si_sim_timescale_comparison.pgf}};
+
+		\node[anchor=north west,inner sep=0pt] (x) at (0.95,-12.5) {\scalebox{0.903}{\import{build/figures/}{colorbar.pgf}}};
+
+		\draw[-latex,ultra thick] ($(g.north east) + (0.2,-0.15)$) -- ($(g.south east) + (0.2,0.8)$) node[midway,xshift=0.2cm,rotate=-90] {Bistability};
+		\draw[-latex,ultra thick] ($(h.north east) + (0.2,-0.15)$) -- ($(h.south east) + (0.2,0.8)$) node[midway,xshift=0.2cm,rotate=-90] {Bistability};
+		\draw[-latex,ultra thick] ($(i.north east) + (0.2,-0.15)$) -- ($(i.south east) + (0.2,0.8)$) node[midway,xshift=0.2cm,rotate=-90] {Bistability};
+
+		\node[rotate=90] (label0) at ($(j.east) + (0.6, -0.1)$) {\vphantom{(}\small\bfseries Emulation};
+		\node[rotate=90] (label1) at ($(k.east) + (0.6, -0.1)$) {\vphantom{(}\small\bfseries Simulation (offset)};
+		\node[rotate=90] (label2) at ($(l.east) + (0.6, -0.1)$) {\vphantom{(}\small\bfseries Simulation};
+
+		\node at ($(a.north west) + (0.2,-0.2)$) {\textbf{A}};
+		\node at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+		\node at ($(c.north west) + (0.2,-0.2)$) {\textbf{C}};
+		\node at ($(d.north west) + (0.2,-0.2)$) {\textbf{D}};
+		\node at ($(e.north west) + (0.2,-0.2)$) {\textbf{E}};
+		\node at ($(f.north west) + (0.2,-0.2)$) {\textbf{F}};
+		\node at ($(g.north west) + (0.2,-0.2)$) {\textbf{G}};
+		\node at ($(h.north west) + (0.2,-0.2)$) {\textbf{H}};
+		\node at ($(i.north west) + (0.2,-0.2)$) {\textbf{I}};
+		\node at ($(j.north west) + (0.2,-0.2)$) {\textbf{J}};
+		\node at ($(k.north west) + (0.2,-0.2)$) {\textbf{K}};
+		\node at ($(l.north west) + (0.2,-0.2)$) {\textbf{L}};
+
+		\begin{pgfonlayer}{background}
+			\node[inner sep=6pt,rounded corners,fill=nicegreen!20,fit=(a) (label0)] (emulation) {};
+			\node[inner sep=6pt,rounded corners,fill=nicered!20,fit=(b) (label1)] (simulation_offset) {};
+			\node[inner sep=6pt,rounded corners,fill=niceblue!20,fit=(c) (label2)] (simulation) {};
+		\end{pgfonlayer}
+	\end{tikzpicture}
+	\caption{%
+		\textbf{Equivalent software simulations validate the emergence of bistable population activity for low inputs strengths and lead to comparable timescales.}
+		The panels \textbf{(A)}, \textbf{(D)}, (\textbf{G}) and \textbf{(J)} show the emulation results already presented in \cref{main-fig:time_scale} in the main part of this manuscript.
+		The panels \textbf{(B)}, \textbf{(E)}, \textbf{(H)} and \textbf{(K)} illustrate the results of corresponding software simulations incorporating the amplitude offset within the synaptic currents present on the neuromorphic system, whereas \textbf{(C)}, \textbf{(F)}, \textbf{(I)} and \textbf{(L)} depict the simulation data acquired for ideal dynamics and hence without offset.
+	}
+	\label{fig:simulation_comparison}
+\end{figure*}
+
+The bistable population activity and the associated emerging autocorrelation persist in simulation.
+More specifically, the autocorrelation functions as well as the estimated autocorrelation times of simulation and emulation mostly coincide (\cref{fig:simulation_comparison} A, B and C), the distribution of the population activity shows a similar bimodal trend (\cref{fig:simulation_comparison} D to I) and the autocorrelation times are well described by the \gls{hmm} (\cref{fig:simulation_comparison} J, K and L).
+Hence, we conclude that the bistable behaviour as well as the associated emergent autocorrelations are indeed a result of the model dynamics.
+
+\begin{figure*}[t]
+	\centering
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (a) at (0,0) {\input{build/figures/si_hom_final_rate.pgf}};
+		\node[anchor=north west,inner sep=0pt] (b) at (4.2,0) {\input{build/figures/si_hom_connectivity.pgf}};
+		\node[anchor=north west,inner sep=0pt] (c) at (0,-4.1) {\input{build/figures/si_hom_weight_histogram.pgf}};
+		\node[anchor=north west,inner sep=0pt] (d) at (8.4,0) {\input{build/figures/si_hom_average_weight.pgf}};
+		\node[anchor=north west,inner sep=0pt] (e) at (8.4,-4.1) {\input{build/figures/si_hom_ac.pgf}};
+		\node[anchor=north west,inner sep=0pt] (f) at (12.6,0) {\input{build/figures/si_hom_activity_distribution.pgf}};
+		\node[anchor=north west,inner sep=0pt] (g) at (12.6,-4.1) {\input{build/figures/si_hom_activity.pgf}};
+		\node at ($(a.north west) + (0.2,-0.2)$) {\textbf{A}};
+		\node at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+		\node at ($(c.north west) + (0.2,-0.2)$) {\textbf{C}};
+		\node at ($(d.north west) + (0.2,-0.2)$) {\textbf{D}};
+		\node at ($(e.north west) + (0.2,-0.2)$) {\textbf{E}};
+		\node at ($(f.north west) + (0.2,-0.2)$) {\textbf{F}};
+		\node at ($(g.north west) + (0.2,-0.2)$) {\textbf{G}};
+
+	\end{tikzpicture}
+	\caption{%
+		\textbf{A second implementation of homeostatic regulation leads to similar results of bistable population activity on BrainScaleS-2.}
+		Homeostatic regulation incorporating stochastic rounding promotes bistable population activity for low input rates $h$.
+		\textbf{(A)} This choice of regulation likewise adjusts the population rate $\nu$ close to a target value (dashed line).
+		\textbf{(B)} The connectivity slightly exceeds the homeostatic regulation with probabilistic update acceptance.
+		\textbf{(C)} The distribution of weights $c_{ij}w_{ij}^\mathrm{rec}$ is comparable to the one reached with stochastic update acceptance.
+		\textbf{(D)} However, the average weight $w^\mathrm{rec}$ is slightly lower.
+		\textbf{(E)} The population activity $\nu$ features exponentially shaped autocorrelation functions $C(t')$ with autocorrelation times $\tau_\mathrm{AC}$ of same magnitude as the ones presented in main manuscript.
+		\textbf{(F)} The distribution of the population activity $P(\nu)$ again resembles a bimodal trend for decreasing values of $h$, explaining the emergent autocorrelation times.
+		\textbf{(G)} This bimodal trend is reflected in form of phases of high and low activity for low $h$.
+	}
+	\label{fig:hom_comparison}
+\end{figure*}
+
+\section{Comparison to a different implementation of homeostatic regulation \label{sec:hom_comparison}}
+
+The neuromorphic implementation puts constraints on the range of implementable homeostatic regulation formulas.
+As indicated by \cref{main-fig:stability}, the limited range, integer arithmetic of the \gls{ppu} requires additional mechanisms -- like the stochastic acceptance of weight updates -- to guarantee smooth convergence of the synaptic weights and in turn the attainment of the desired target rate.
+While the stochastic acceptance renders the resulting weight distributions diverse (\cref{main-fig:chip}D), it likewise assigns many synapses a weight of zero (\cref{main-fig:chip}F).
+To investigate whether the resulting bistable population activity is a result of our specific choice of homeostatic regulation, we implemented a second mechanism which aims to adapt the afferent synaptic weights of each neuron more uniformly.
+Specifically, we utilize the same form as the one presented in \cref{main-eq:rule}, but with a smaller learning rate $\lambda = 0.39$ and instead of a stochastic acceptance probability added a small uniformly drawn random number to each update to realize stochastic rounding.
+This mechanism likewise regulates the network activity (\cref{fig:hom_comparison} A to D), and, moreover, reveals emerging autocorrelations for low $h$ of similar magnitude (\cref{fig:hom_comparison}).
+Different to the rule presented in the main manuscript, the connectivity increases monotonously with decreasing $h$ and only slightly decreases for very small $h$ again (\cref{fig:hom_comparison}B).
+Again, these correlations stem from phases of low and high activity (\cref{fig:hom_comparison} F and G) in direct accordance with our previous results.
+
+
+\section{Solution of the mean-field Langevin equation}
+
+For the mean activity of a finite network, we obtain to leading order in system size
+\begin{equation}\label{si_eq:MF_noise}
+    \dot{\rho}(t) = h - a\rho(t) -b\rho^2(t) + \sigma\sqrt{\rho(t)/N}\eta(t)\, ,
+\end{equation}
+where $\eta(t)$ is Gaussian white noise with mean zero and unit variance and $\sigma/\sqrt{N}$ is a system-size dependent factor.
+This (Ito) Langevin equation is equivalent to the Fokker Planck equation
+\begin{align}\label{si_eq:FP_noise}
+    \dot{P}(\rho,t) = &-\frac{\partial}{\partial\rho}\left[\left(h-a\rho(t)-b\rho^2(t)\right)P(\rho,t)\right]\nonumber\\
+                    &+\frac{\sigma^2}{2N}\frac{\partial^2}{\partial\rho^2}\left[\rho(t)P(\rho,t)\right]\, .
+\end{align}
+Imposing $\dot{P}(A,t)=0$ and simplifying $f(\rho)=h-a\rho-b\rho^2$ as well as $g(\rho)=\rho\sigma^2/2N$, we get an equation for the stationary state $P^\ast(\rho)$
+\begin{align}
+    0
+    &= -\frac{d}{d\rho}\left[f(\rho)P(\rho)\right] + \frac{d^2}{d\rho^2}\left[g(\rho)P(\rho)\right]\\
+    &= \frac{d}{d\rho}\left(-f(\rho)P(\rho) +  \frac{d}{d\rho}\left[g(\rho)P(\rho)\right]\right) = \frac{d}{d\rho} j,
+\end{align}
+where $j$ reminds of the current in a continuity equation that has to be constant.
+Imposing the zero-flux condition ($j=0$) one can derive the steady state probability distribution as usual~\cite{gardiner_handbook_1985}.
+For this, we have to solve
+\begin{align}
+ \frac{d}{d\rho}\left[g(\rho)P(\rho)\right] = f(\rho)P(\rho).
+\end{align}
+Replacing $\Gamma(\rho)=g(\rho)P(\rho)$, we have to solve
+\begin{align}
+    \frac{d}{d\rho}\Gamma(\rho) = \Gamma(\rho)f(\rho)/g(\rho),
+\end{align}
+and obtain
+\begin{align}
+    \Gamma(\rho) = e^{\int \frac{f(\rho)}{g(\rho)}d\rho}.
+\end{align}
+In our case, $f(\rho)/g(\rho)= \left(h/\rho -a -b\rho\right)2N/\sigma^2$ such that
+\begin{align}
+    P(\rho) = \Gamma(\rho)/g(\rho) \propto \frac{2N}{\rho\sigma^2}e^{\frac{2N}{\sigma^2}\left(h\ln\rho-a\rho-\frac{b}{2}\rho^2\right)},
+\end{align}
+Rewriting $1/\rho=e^{-\ln{\rho}}$, we finally arrive at
+\begin{equation}
+    P(\rho) = \mathcal{N}\exp\left\{-\frac{2N}{\sigma^2}V(\rho)\right\}\, ,
+\end{equation}
+with a normalization constant $\mathcal{N}$ and the potential
+\begin{align}
+    V(\rho) = \left(\frac{\sigma^2}{2N}-h\right)\ln\rho + a\rho + \frac{b}{2}\rho^2\, .
+\end{align}

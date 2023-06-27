@@ -1,0 +1,59 @@
+\section{\label{sec:discussion}Discussion}
+
+% summary: autocorrelations from bistability
+In summary, we showed that networks of \gls{ei} \gls{lif} neurons with homeostatic regulation during training can self-organize for low external input into a dynamical regime with stochastic switching between states of high population firing rate (up state) and states of low population firing rate (down state).
+Stochastic switching is the result of an emergent bistability, where a dynamical barrier between two metastable states (up and down) can be crossed due to fluctuations: finite-size activity fluctuations to cross up-to-down and external-noise fluctuations to cross down-to-up.
+The crossing rate decreases with the barrier height, similar to classical nucleation rates decreasing for a larger free-energy barrier~\cite{feder_homogeneous_1966, kashchiev_nucleation_2000, zierenberg_canonical_2017}, and we showed numerically that the barrier height increases with system size.
+Finally, a reduced crossing rate implies an increased autocorrelation time, which we demonstrated for both neuromorphic hardware and numerical simulations.
+Our findings of large emergent autocorrelation times in networks of spiking neurons complements recent observations in networks regulated by spike-timing-dependent plasticity~\cite{cramer_control_2020} or when trained to perform working memory tasks~\cite{kim_strong_2021}.
+
+
+Importantly, the stochastically-switching population activity that we observe does not require an active adaptation mechanism:
+The emergent bistability was recorded in the testing phase after turning off homeostatic plasticity.
+While plasticity was necessary to shape the weight distribution, it is not relevant for the stochastic switching between metastable-active (high rate) and metastable-absorbing (low-rate) states.
+Our basic mechanism of a dynamical barrier that separates two metastable fixed points is consistent with previous observations of perturbation-induced state switching in spiking neural networks~\cite{brunel_effects_2001, renart_mean-driven_2006, tartaglia_bistability_2017}.
+Here, we do not require additional, strong external perturbations, because we can control the height of the dynamical barrier and thereby observe the state switching induced by the available, weak external input during finite-time recordings.
+%Importantly, the fluctuation-induced bistability is different from adaptation-based mechanisms, such as adaptation currents~\cite{parga_network_2007-1}, depletion of synaptic utility~\cite{millman_self-organized_2010} or self-organized bistability~\cite{di_santo_self-organized_2016, buendia_self-organized_2020}.
+Importantly, the stochastic switching observed here is different from adaptation-based mechanisms, such as adaptation currents~\cite{parga_network_2007}, or depletion of synaptic utility~\cite{millman_self-organized_2010, bonachela_self-organization_2010}.
+
+It is interesting to discuss more in depth the connection with the mechanism of self-organized bistability (SOB)~\cite{di_santo_self-organized_2016, buendia_feedback_2020} which has recently shown to be relevant for collective brain dynamics \cite{buendia_self-organized_2020}.
+This is a mechanism akin to self-organized criticality (SOC)~\cite{bak_self-organized_1988, buendia_feedback_2020}, where the system self-organizes by means of a feedback-loop between the level of activity (overall firing rate) and the control parameter (the mean synaptic weight) to the edge of a phase transition.
+In the case of SOB this is a discontinuous phase transition.
+In the present case, there is a similar feedback loop during training.
+But rather than acting on a global control parameter, this feedback acts differentially for each synaptic weight, thereby generating a broad weight distribution, which, for low external input, tunes the system to a bistable state at the edge of the transition between high and low firing rates.
+Due to this bistability, in combination with external drive and finite-size fluctuations, we observe stochastic switching in the test phase (no homeostatic plasticity).
+
+%The here identified mechanism of a stochastic state switching thereby presents a new perspective on so-called up-and-down states.
+%Up-and-down states are defined on the level of a single-neuron membrane potential that switches between states with higher membrane potential resulting in spiking responses and those with lower membrane potential~\cite{wilson_up_2008}.
+%While some of the aforementioned models utilize adaptation mechanisms to generate up-and-down states~\cite{millman_self-organized_2010,di_santo_self-organized_2016, buendia_self-organized_2020}, we here develop an alternative explanation:
+%If neurons homeostatically regulate their firing rates, a decreasing external input can result in emergent autocorrelations with potential functional benefits~\cite{zierenberg_homeostatic_2018, cramer_control_2020} until a point where bistability can emerge on the population level.
+%As a result of such (local) collective bistability, single neurons could switch between states of high and low synaptic input, which could in turn cause up-and-down states on the level of their membrane potentials.
+%Such up-and-down states have been demonstrated as a collective effect of pathological bursts in neuronal cultures~\cite{vardi_simultaneous_2016}, but also more subtle in striatal~\cite{wilson_up_2008,stern_spontaneous_1997} and cortical~\cite{cossart_attractor_2003} areas.
+%Our results provide new paths to test whether such observations of up-and-down states are connected to emergent bistability from homeostatic regulation via in-vitro assays or experiments with sensory deprivation.
+
+The here identified mechanism of a stochastic state switching thereby presents a new perspective on so-called up-and-down states.
+Up-and-down states are defined on the level of a single-neuron membrane potential that switches between states with higher membrane potential, resulting in spiking responses, and those with lower membrane potential~\cite{wilson_up_2008}.
+While some of the aforementioned models utilize adaptation mechanisms to generate up-and-down states~\cite{millman_self-organized_2010,di_santo_self-organized_2016, buendia_self-organized_2020}, we here develop an alternative explanation:
+If neurons homeostatically regulate their firing rates, a decreasing external input can result in emergent autocorrelations with potential functional benefits~\cite{zierenberg_homeostatic_2018, cramer_control_2020} until a point where bistability can emerge on the population level.
+As a result of such emergent bistability, single neurons would switch between states of high and low synaptic input, which could in turn cause up-and-down states on the level of their membrane potentials.
+This explanation is consistent with experimental observations of up-and-down states in striatal neurons~\cite{wilson_up_2008,stern_spontaneous_1997}, which focused on single-cell bistability, and in cortical slices~\cite{cossart_attractor_2003} and neuronal cultures~\cite{vardi_simultaneous_2016}, where up-and-down states were argued to be a collective (network) effect, and agrees with observations of bistability in networks of \gls{lif} neurons trained to store spatio-temporal patterns~\cite{scarpetta_hysteresis_2018}.
+%, while our mean-field theory implies that the key mechanism is a stochastic switching that does not require a discontinous (``first-order'') non-equilibrium phase transition.
+Our results thereby provide new paths to test whether experimental observations of up-and-down states are connected to emergent bistability from homeostatic regulation.
+
+
+%Our general mean-field theory of fluctuation-induced bistability further presents a new paradigm for arbitrary finite systems with absorbing states and external drive.
+%Examples of such systems include collective dynamics in epidemic spread~\cite{pastor-satorras_epidemic_2015} and ecosystems~\cite{scheffer_critical_2009, martin_eluding_2015}, catalytic reactions on surfaces~\cite{ehsasi_steady_1989}, calcium dynamics in living cells~\cite{bar_discrete_2000}, or turbulent liquid crystals~\cite{takeuchi_directed_2007,takeuchi_experimental_2009}.
+%Indeed, for some of these systems the phenomenon of bistability has been observed, e.g., as switching behavior in disease models~\cite{bottcher_critical_2017}, for cellular automata with long-range interactions~\cite{pizzi_bistability_2021}, for CO oxidation~\cite{ertl_oscillatory_1991, suchorski_role_2018, wang_bistability_2019}, or as phase separation in active matter~\cite{martin_fluctuation-induced_2021,di_carlo_evidence_2022}.
+%With our work, we present fluctuation-induced bistability as a new paradigm that should be observable (or avoidable) if the finite-size fluctuations are controlled accordingly.
+Our simple mean-field theory implies that fluctuation-induced stochastic switching could be a very general effect in driven, finite systems with absorbing states.
+Examples of such systems include collective dynamics in epidemic spread~\cite{pastor-satorras_epidemic_2015}, neural networks~\cite{beggs_neuronal_2003, chialvo_emergent_2010, wilting_25_2019}, ecosystems~\cite{scheffer_critical_2009, martin_eluding_2015}, and ultracold Rydberg atomic gases~\cite{helmrich_signatures_2020}, catalytic reactions on surfaces~\cite{ehsasi_steady_1989}, calcium dynamics in living cells~\cite{bar_discrete_2000}, or turbulence in liquid crystals~\cite{takeuchi_directed_2007, takeuchi_experimental_2009} and active nematics~\cite{doostmohammadi_onset_2017}.
+Indeed, for some of these systems stochastic switching has been observed, e.g., as switching behavior in disease models~\cite{bottcher_critical_2017} or rate models of neural activity~\cite{van_meegen_large-deviation_2021}, for cellular automata with long-range interactions~\cite{pizzi_bistability_2021}, for CO oxidation~\cite{ertl_oscillatory_1991, suchorski_role_2018, wang_bistability_2019}, or as phase separation in active matter~\cite{martin_fluctuation-induced_2021, di_carlo_evidence_2022}.
+Future work could include generalizing our results to systems that can be described by scalar fields, which is a common situation in non-equilibrium statistical physics, and investigate under what conditions one can observe (or avoid) stochastic switching on a macroscopic scale.
+
+
+
+%We have shown a first demonstration how to exploit emergent autocorrelations due to bistability in spiking neural networks to encode information about an input even after stimulus offset.
+%Reliable discrimination of the input rate was possible through the mean response across an ensemble of modules.
+%While we here focused on discriminating the first moment of the input signal from a mean response, analogous to established concepts to quantify information processing capacities via a dynamic range~\cite{munoz_colloquium_2018, kinouchi_optimal_2006}, we expect that complex input statistics can be captured with tailored individual modules~\citep{zierenberg_tailored_2020} and that higher moments can be captured from higher-dimensional representations of the ensemble response through neural manifolds~\cite{gallego_neural_2017, gao_theory_2017}.
+%These first results may serve as a foundation for a bottom-up approach towards a mechanistic understanding of information processing and towards practical applications of neuromorphic hardware that may exploit multi-chip architectures.
+

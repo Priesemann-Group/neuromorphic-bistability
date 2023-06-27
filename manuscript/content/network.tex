@@ -1,0 +1,96 @@
+\tikzset{%
+	inh/.style = {%
+		draw=nicered,%
+		fill=nicered,
+		circle,
+		inner sep=0pt,
+		minimum width=0.3cm,
+	},%
+	exc/.style = {%
+		draw=niceblue,%
+		fill=niceblue,
+		regular polygon,
+		regular polygon sides=3,
+		minimum width=0.4cm,
+		inner sep=0pt,
+	},%
+}%
+\pgfmathsetseed{42}%
+
+\begin{tikzpicture}[
+		x=2.3cm,
+		y=2.3cm,
+		>=stealth,
+		line width=1.0\pgflinewidth,
+		anchor=center
+        ]
+
+	\useasboundingbox (-1.4,0.65) rectangle (0.7,-0.82);
+
+	% network layers
+	\foreach \b in {0,1,...,4}{
+		\ifthenelse{\b=3}{
+			\node[inh] (background \b) at (-1.2,0.5-0.25*\b) {};
+		}{
+			\node[exc] (background \b) at (-1.2,0.5-0.25*\b) {};
+		}
+	}
+
+	\pgfmathsetmacro{\N}{9}
+	\pgfmathsetmacro{\r}{0.45}
+	\coordinate (center) at (0,0);
+	\foreach \n in {0,1,...,\N}{
+		\ifthenelse{\n=2 \OR \n=5}{
+			\node[inh] (hidden \n) at ($({\r*sin(\n*360/(\N+1))},{\r*cos(\n*360/(\N+1))})+(center)$) {};
+		}{
+			\node[exc] (hidden \n) at ($({\r*sin(\n*360/(\N+1))},{\r*cos(\n*360/(\N+1))})+(center)$) {};
+		}
+	}
+
+        \begin{scope}[on background layer]
+			% connectivity
+			\begin{scope}
+			\path[scope fading=south] (-0.8,-0.1) rectangle ++(1.6,-2.0);
+			\foreach \h in {0,1,...,\N}{
+				\foreach \i in {0,1,...,4}{
+    	        			\pgfmathparse{rnd}
+    	        			\pgfmathsetmacro{\foobar}{\pgfmathresult}
+    	        			\ifthenelse{\lengthtest{\foobar pt<0.2 pt}}{
+						\ifthenelse{\i=3}{
+							\draw[-stealth,nicered] (background \i) -- (hidden \h);
+						}{
+							\draw[-stealth,niceblue] (background \i) -- (hidden \h);
+						}
+					}{}
+				}
+			}
+			\end{scope}
+			
+			\fill[white,opacity=0.7] (0,0) circle (1.5cm);
+			\draw[nicegray,semithick] (0,0) circle (1.5cm);
+
+			\foreach \i in {0,1,...,\N}{
+				\foreach \j in {0,1,...,\N}{
+					\ifthenelse{\equal{\j}{0}}{
+						% no self connections
+					}{
+						\pgfmathparse{rnd}
+						\pgfmathsetmacro{\foobar}{\pgfmathresult}
+						\ifthenelse{\lengthtest{\foobar pt<0.2 pt}}{
+							\pgfmathsetmacro{\bend}{ifthenelse(\j <= \N / 2 + 1,"bend right","bend left"))}
+							\pgfmathsetmacro{\target}{int(Mod(\i + \j, \N + 1))}
+							\ifthenelse{\i=2 \OR \i=5}{
+								\draw[-stealth,nicered] (hidden \i) to[\bend] (hidden \target);
+							}{
+								\draw[-stealth,niceblue] (hidden \i) to[\bend] (hidden \target);
+							}
+						}{}
+				}
+				}
+			}
+		\end{scope}
+
+	\coordinate (label) at (0.0,-0.77);
+	\node[nicegray,anchor=center] at (label -| hidden 0) {\footnotesize Network};
+	\node[nicegray,anchor=center] at (label -| background 0) {\footnotesize Input};
+\end{tikzpicture}

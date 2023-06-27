@@ -1,0 +1,90 @@
+\documentclass[aps,prx,onecolumn,superscriptaddress,amsmath]{revtex4-2}
+\usepackage[hidelinks]{hyperref}
+\usepackage[separate-uncertainty=true,binary-units]{siunitx}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{glossaries}
+\usepackage{ifthen}
+\usepackage[noabbrev,capitalise]{cleveref}
+\usepackage{import}
+\usepackage{rotating}
+\usepackage[T1]{fontenc}
+\usepackage{xr}
+
+\externaldocument[main-]{build/main}
+
+\usetikzlibrary{
+	calc,
+	shapes,
+	positioning,
+	backgrounds,
+	decorations.pathreplacing,
+	fit,
+	external,
+	fadings}
+%\tikzexternalize
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+\definecolor{nicegray}{HTML}{555555}
+\definecolor{nicered}{HTML}{AF5A50}
+\definecolor{niceblue}{HTML}{005B82}
+\definecolor{nicegreen}{HTML}{7D966E}
+\definecolor{niceyellow}{HTML}{D7AA50}
+
+% Custom abbreviations for cleveref
+\crefname{figure}{FIG.}{FIG.}
+\crefname{table}{TABLE}{TABLE}
+\crefname{equation}{Eq.}{Eq.}
+\crefname{supp}{SI}{SI}
+
+% Define abbreviations
+\newacronym{ei}{E-I}{excitatory-inhibitory}
+\newacronym{lif}{LIF}{leaky integrate-and-fire}
+\newacronym{asic}{ASIC}{application-specific integrated circuit}
+\newacronym{ppu}{PPU}{plasticity processing unit}
+\newacronym{simd}{SIMD}{single instruction multiple data}
+\newacronym{hmm}{HMM}{Hidden Markov Model}
+\newacronym{psp}{PSP}{post-synaptic potential}
+\newacronym{epsp}{EPSP}{excitatory post-synaptic potential}
+
+\begin{document}
+
+\title{Supplementary Material: Autocorrelations from emergent bistability in homeostatic spiking neural networks on neuromorphic hardware}
+\author{Benjamin Cramer}
+\author{Markus Kreft}
+\author{Sebastian Billaudelle}
+\author{Vitali Karasenko}
+\author{Aron Leibfried}
+\author{Eric Müller}
+\author{Philipp Spilger}
+\author{Johannes Weis}
+\author{Johannes Schemmel}
+\affiliation{Kirchhoff-Institute for Physics, Im Neuenheimer Feld 227, Heidelberg University, Germany}
+\author{Miguel A. Mu\~noz}
+\affiliation{Departamento de Electromagnetismo y Física de la Materia e Instituto Carlos I de Física Teórica y Computacional, Universidad de Granada, E-18071 Granada, Spain}
+\author{Viola Priesemann}
+\affiliation{Max Planck Institute for Dynamics and Self-Organization, Am Fa{\ss}berg 17, 37077 G\"ottingen, Germany}
+\affiliation{Institute for the Dynamics of Complex Systems, University of G\"ottingen, Friedrich-Hund-Platz 1, 37077 G\"ottingen, Germany}
+\author{Johannes Zierenberg}
+\affiliation{Max Planck Institute for Dynamics and Self-Organization, Am Fa{\ss}berg 17, 37077 G\"ottingen, Germany}
+
+\date{\today}
+
+\pacs{}
+\keywords{bistability}
+
+\maketitle
+
+\glsresetall
+
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+
+\input{content/si.tex}
+
+\bibliography{benjamin_bistable.bib}
+
+\end{document}

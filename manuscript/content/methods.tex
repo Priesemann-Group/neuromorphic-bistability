@@ -1,0 +1,122 @@
+\section{\label{sec:methods}Model and Methods}
+
+To study emergent collective dynamics in homeostatic neuromorphic devices, we combine experiments on an actual neuromorphic device (BrainScaleS-2), computer simulations, and a phenomenological mean-field theory. In this section, we first describe the basic ingredients of the neuromorphic hardware under consideration (Sec.~\ref{sec:methods}~a), formulate a mathematical model that can be implemented on this hardware (Sec.~\ref{sec:methods}~b), build a computer simulation that reproduces the resulting dynamics (Sec.~\ref{sec:methods}~c), and define relevant observables to study population dynamics (Sec.~\ref{sec:methods}~d).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Neuromorphic hardware.}
+\label{sec:brainscale}
+BrainScaleS-2~\cite{friedmann_demonstrating_2017,schemmel_accelerated_2022,pehle_brainscales-2_2022} is a mixed-signal neurmorphic architecture that allows to emulate networks of up to $512$ \gls{lif} neurons (\cref{fig:chip}B).
+The term \textit{emulation} is used to clearly distinguish between this physical implementation, where each observable has a measurable counterpart on the neuromorphic chip, and standard software \textit{simulations} on conventional hardware (see below).
+In particular, neurons are implemented as electrical circuits that emulate \gls{lif} dynamics in a time-continuous and parallel manner.
+The system further consists of an array of $256 \times 512$ physically implemented current-based synapses that support near arbitrary topologies.
+Their dynamics emulate leaky currents and feature coupling strengths $w_{ij}$ with a precision of \SI{6}{\bit}, i.e., $64$ discrete values, which limits synaptic weights to integers in the range $[0,63]$.
+More technical details are provided in \cref{sec:appendix_hardware}.
+Due to the analog implementation, time constants are determined by the electrical components on the substrate and are rendered approximately a factor \num{1000} times faster than the ones of their biological archetype.
+Within this paper, all referenced time scales are converted to the equivalent biological time domain unless otherwise stated.
+
+Homeostatic plasticity is implemented on-chip by a specialized, freely-programmable processor unit: the \gls{ppu}~\cite{friedmann_demonstrating_2017}.
+The \gls{ppu} is able to update the synaptic weights of \SI{128}{} synapses in parallel.
+To measure local spike rates relevant for our plasticity rule (see below), we draw on dedicated circuits within each neuron that count the number of emitted spikes.
+
+The system comes with specialized accelerators for the drawing of random numbers~\citep{schemmel_accelerated_2020}.
+These facilitate an on-chip generation of Poisson distributed input spikes as well as the efficient implementation of the stochastic homeostatic regulation without additional communication bottlenecks.
+The only remaining communication with the host system consists of the transfer of instructions for configuring the BrainScaleS-2 system at the beginning and the readout of the result at the end of an experiment~\citep{muller_extending_2020,muller_scalable_2022}, making the hardware implementation very fast.
+
+The neuromorphic chip is subject to variations both in space and time:
+first, the analog implementation causes temporal noise within the model dynamics and second, the production process necessarily leads to small variations across electrical components.
+The latter variations can, however, be mitigated by exploiting the configurability of the BrainScaleS-2 system by resorting to calibration routines~\citep{muller_scalable_2022}, thereby reducing the parameter spread across neurons (see \cref{sec:parametrization}).
+The remaining variability of parameters can be quantified by their mean and standard deviation (\cref{tab:parameters}).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Neural network model.}
+\label{sec:model}
+As a minimal model of biological spiking neurons, we consider a recurrent network of $N=512$ (unless otherwise stated) \gls{lif} neurons coupled to an input layer consisting of $N/2$ Poisson sources (\cref{fig:chip}A).
+The model is build to reflect the architecture of BrainScaleS-2.
+Each \gls{lif} neuron integrates spikes from, on average, $K^\mathrm{rec}=100$ recurrent neurons of the network and from, on average, $K^\mathrm{ext}$ external neurons of the input layer that will be varied to adjust the strength of external input.
+The \emph{physical} connection between neuron $i$ and $j$ is randomly realized, $c_{ij}=\{-1,0,1\}$, and further weighted by an integer-value coupling weight $w_{ij}\in[0, 63]$.
+Neurons can be either excitatory or inhibitory, which is reflected in the sign of $c_{ij}$ for a given neuron $j$ for all outgoing coupling synapses.
+Also, in analogy with cortical networks~\cite{douglas_inhibition_2009}, \SI{20}{\percent} of the neurons in both network and input layer are inhibitory.
+While the recurrent neurons are \gls{lif} neurons, input sources generate spikes independently as a Poisson process with rate $\nu^\mathrm{ext}=\SI{10}{\hertz}$, which amounts to an average input rate per recurrent neuron of $h=\nu^\mathrm{ext}K^\mathrm{ext}$.
+
+The dynamics of a recurrent \gls{lif} neuron $i$ is modelled by a leaky membrane potential $u_i(t)$ given by
+\begin{equation}
+	\tau^\mathrm{m}_i\dot{u}_i(t) = u_i^\mathrm{leak}-u_i(t) + R_i I_i(t)\, , \label{eq:membrane}
+\end{equation}
+%
+where $\tau^\mathrm{m}_i = C_i^\mathrm{m} R_i$ is the membrane time constant with the membrane capacitance $C_i^\mathrm{m}$ as well as the resistance $R_i$, and $u_i^\mathrm{leak}$ is the leak potential.
+%
+Similarly, $I_i(t)$ denotes a leaky synaptic current which is described by
+\begin{align}
+    \tau^\mathrm{s}_i\dot{I}_i(t) = -I_i(t) &+ \gamma_i\sum_j c_{ij}w_{ij}\sum_k\delta(t-t_j^k-\tau^d)\, , \label{eq:synapse}
+\end{align}
+%
+where $\tau^\mathrm{s}_i$ is the synaptic time constant, $\gamma_i$ is a scale factor, $w_{ij}$ are dimensionless coupling weights between neurons $i$ and $j$ (which covers recurrent and external pre-synaptic neurons), and $\sum_k\delta(t-t_j^k-\tau^\mathrm{d})$ is the spike train of neuron $j$ that arrives at neuron $i$ with past spike times $t_j^k$ and synaptic time delay $\tau^\mathrm{d}$.
+Spikes are generated once a neuron's membrane potential crosses a threshold, i.e., $u_i(t)>u_i^\mathrm{thres}$, after which the membrane potential is reset to $u_i^\mathrm{reset}$ where it remains for the duration of the refractory period $\tau^\mathrm{ref}$.
+Explicit parameters were motivated by neurophysiology but subject to hardware constraints (cf. \cref{tab:parameters}).
+
+While external coupling weights are fixed to $w_{ij}^\mathrm{in} = 17$, recurrent couplings are initialized at $w_{ij}^\mathrm{rec} = 0$, and subject to homeostatic plasticity during a training phase to regulate the single-neuron firing rate around a target of $\nu^\ast=\SI{10}{\hertz}$.
+More specifically, we implement homeostatic plasticity as an iterative, stochastic update of all realized ($c_{ij}\neq 0$) recurrent weights $w^\mathrm{rec}_{ij}$.
+Each iteration consists of a $\SI{5}{\second}$ time window for which we record the firing rate $\nu_i$ of each individual neuron.
+In between iterations, we stochastically update each recurrent weight $w^\mathrm{rec}_{ij}$ independently with probability $p$ by an amount
+\begin{equation}
+	\Delta w_{ij} = \lambda(\nu^\ast-\nu_j),
+	\label{eq:rule}
+\end{equation}
+which depends only on the local information of the post-synaptic neuron $i$ and where $\lambda p$ sets the time scale of the homeostasis.
+While our results in the main text are obtained with probabilistic weight changes in order to overcome artifacts from the limited precision of $w_{ij}$ (see \cref{sec:hom_parametrization} for the effect of $p$ and $\lambda$), we obtain similar results when instead updating each weight by $\Delta w_{ij}$ plus integer rounding noise (see Supplemental Material).
+%While we here chose a small probability $p$ to overcome artifacts from the limited precision of $w_{ij}$ (see \cref{sec:hom_parametrization} for the effect of $p$ and $\lambda$), we obtain similar results when instead updating each weight by $\Delta w_{ij}$ plus integer rounding noise (see Supplemental Material).
+To preserve the effective sign of excitatory and inhibitory weights, $w_{ij}$ are restricted to positive values and saturate at zero.
+Besides this, the proposed simple update scheme does not distinguish between excitatory and inhibitory couplings.
+%, a choice that is motivated from an overall dependence of the network rate on a global coupling in theoretical approaches~\cite{mastrogiuseppe_intrinsically-generated_2017,ostojic_two_2014}.
+After the homeostatic update, the network dynamics are evolved for about \SI{1}{\second} in order to allow the network activity to re-equilibrate before assessing $\nu_i$ for the next update.
+Importantly, we only employ homeostatic plasticity during the training stage of our experiment.
+All correlation analyses are evaluated on spike data from a testing phase (typically $T=\SI{100}{\second}$) with fixed synaptic weights.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Computer Simulation.}
+\label{sec:simulation}
+For comparison and finite-size scaling analysis, we use additional computer simulations where we employ the Python simulation package Brian2~\cite{goodman_brian_2009}.
+This package generates from the differential equations \cref{eq:membrane,eq:synapse} a discrete-time Euler integration scheme together with full control over all system parameters.
+We use these simulations to (i) cross-validate the results from the neuromorphic chip (see Supplemental Material) and to (ii) analyze how changing system sizes, $N=\{256,512,768,1024\}$, beyond the hardware-limiting constraints, affect our conclusion.
+The integration time step is set to $\Delta t = \SI{50}{\micro\second}$ to approach the time continuous nature of the BrainScaleS-2 system.
+%The calculations involved in homeostatic weight updates are carried out with floating-point precision.
+To closely mimic the emulated networks, we draw the individual neuron parameters from Gaussian distributions specified by the measured parameter variability of the neuromorphic chip (\cref{tab:parameters}).
+In addition, independent temporal noise with standard deviation $\sigma \sqrt{2*\tau^\mathrm{m}_i}$, with $\sigma = \SI{2}{\milli\volt}$, is added to \cref{eq:membrane}.
+To ensure reproducibility, the code has been made freely available~\cite{noauthor_benjamincramerneuromorphic-bistability_nodate}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Observables.}
+\label{sec:observables}
+The main observables we consider are derived from the \textit{instantaneous population firing rate} $\nu(t)$, defined as the number of network spikes within a time bin $\Delta t$
+\begin{equation}
+	\nu(t)=\frac{1}{N\Delta t}\sum_{i=1}^N \sum_{k=1}^{S_i}\int_t^{t+\Delta t}\delta(t-t_i^k),
+\end{equation}
+where $t_i^k$ are the spike times of neuron $i$, $S_i$ the number of spikes emitted by neuron $i$, and $\Delta t=\SI{5}{\milli\second}$.
+
+From a time series $\nu(t)$, we calculate the stationary \textit{autocorrelation function}
+\begin{equation}\label{eq:correlation}
+	C(t^\prime) = \frac{\text{Cov}[\nu(t+t^\prime)\nu(t)]}{\text{Var}[\nu(t)]},
+\end{equation}
+where $t^\prime$ are multiples of $\Delta t$.
+From the decay of the autocorrelation function it is possible to derive the time scale(s) of temporal correlations.
+In our case, we found the autocorrelation function to be described by a single exponential decay, $C(t^\prime)=e^{-t^\prime/\tau_\mathrm{AC}}$, and extracted a single autocorrelation time $\tau_\mathrm{AC}$ by fit routines.
+%TODO: update this for how we really do it
+% We include the offset $o$ to ensure that time series are equilibrated and discard those experiments for which  $o>0.1$.
+% We further include the amplitude $A$ to focus on the longest correlation time in case there are multiple ones.
+% If this amplitude becomes too small, $A<0.1$, we assume vanishing autocorrelation time $\tau_\mathrm{AC}=0$.
+
+To estimate statistical errors, we average over \num{50} independent experiments.
+
+%connectivity and such ?

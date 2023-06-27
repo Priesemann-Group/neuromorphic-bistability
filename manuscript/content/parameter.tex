@@ -1,0 +1,30 @@
+\begin{ruledtabular}
+	\begin{tabular}{lll}
+		\textbf{Parameter} 			        & \textbf{Symbol} 					& \textbf{Value} \\
+		\hline
+		Membrane capacitance 		        & $C_\mathrm{mem}$								& \SI{2.4(2)}{\pico\farad} \\
+		Threshold potential			        & $u_\mathrm{thresh}$				& \SI{741(06)}{\milli\volt} \\
+		Leak potential				        & $u_\mathrm{leak}$					& \SI{458(29)}{\milli\volt} \\
+		Reset potential				        & $u_\mathrm{reset}$				& \SI{326(06)}{\milli\volt} \\
+		Exciatory input potential			& $I_0^\mathrm{exc}$				& \SI{3.0(04)}{\milli\volt} \\
+		Inhibitory input potential			& $I_0^\mathrm{inh}$				& \SI{-3.3(03)}{\milli\volt} \\
+		Membrane time constant		        & $\tau_\mathrm{mem}$				& \SI{20.4(17)}{\milli\second} \\
+		Excitatory synaptic time constant	& $\tau_\mathrm{syn}^\mathrm{exc}$	& \SI{10.2(05)}{\milli\second} \\
+		Inhibitory synaptic time constant	& $\tau_\mathrm{syn}^\mathrm{inh}$	& \SI{10.1(05)}{\milli\second} \\
+		Refractory period			        & $\tau_\mathrm{ref}$				& \SI{2.0(00)}{\milli\second} \\
+		Synaptic delay				        & $d_\mathrm{syn}$					& \SI{1.0(01)}{\milli\second} \\
+		Neurons                             & $N$                               & \SI{512}{} \\
+		Synapses per neuron      			& $N_\mathrm{syn}$                  & \SI{256}{} \\
+		Inhibitory synapses per neuron      & $N_\mathrm{inh}$                  & \SI{51}{} \\
+		Recurrent synapses per neuron		& $N_\mathrm{rec}$					& \SI{38}{} \\
+		Input synapses per neuron			& $N_\mathrm{in}$                   & \SIrange{44}{128}{} \\
+		Rate per input source				& $\nu$								& \SI{10}{\hertz} \\
+		\hline
+		Target rate							& $\nu_\mathrm{target}$				& \SI{10}{\hertz} \\
+		Learning rate						& $\lambda$              			& \SI{0.5}{} \\
+		\hline
+		Initial weight				        & $w_{ij}^\mathrm{init}$			& \SI{0}{\micro\ampere} \\
+		Plasticity update period	        & $T$								& \SI{1}{\second} \\ 
+		Static trial experiment duration    & $T^\mathrm{static}$               & \SI{80}{\second} \\
+	\end{tabular}
+\end{ruledtabular}

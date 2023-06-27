@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+experiments/hardware/data*
+experiments/hardware/plots/plots
+experiments/hardware/plots/data
+
+manuscript/build
+
+*.pdf
+*.pgf
+*.aux
+*.blg
+*.bbl
+*.log

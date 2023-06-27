@@ -1,0 +1,68 @@
+
+\begin{figure*}[t]
+	\centering
+	\begin{tikzpicture}
+		\node[anchor=north west,inner sep=0pt] (a) at (-7,0) {\input{content/network_full}};
+		\node[anchor=north west,inner sep=0pt] (b) at (-1.8,0) {\input{figures/input_single.pgf}};
+		\node[anchor=north west,inner sep=0pt] (c) at (-1.8,-3.3) {\input{figures/input_avg_high.pgf}};
+		\node[anchor=north west,inner sep=0pt] (d) at (-1.8,-6.6) {\input{figures/input_avg_low.pgf}};
+		\node[anchor=north west,inner sep=0pt] (e) at (4.6,0) {\input{figures/input_onset.pgf}};
+		\node[anchor=north west,inner sep=0pt] (f) at (4.6,-3.3) {\input{figures/input_offset.pgf}};
+		\node[anchor=north west,inner sep=0pt] (g) at (4.6,-6.6) {\input{figures/dr.pgf}};
+		\node at ($(a.north west) + (0.2,-0.2)$) {\textbf{A}};
+		\node at ($(b.north west) + (0.2,-0.2)$) {\textbf{B}};
+		\node at ($(c.north west) + (0.2,-0.2)$) {\textbf{C}};
+		\node at ($(d.north west) + (0.2,-0.2)$) {\textbf{D}};
+		\node at ($(e.north west) + (0.2,-0.2)$) {\textbf{E}};
+		\node at ($(f.north west) + (0.2,-0.2)$) {\textbf{F}};
+		\node at ($(g.north west) + (0.2,-0.2)$) {\textbf{G}};
+	\end{tikzpicture}
+	\caption{%
+		\textbf{Ensembles of bistable networks enable discrimination of input rate even after stimulus offset.}
+		\textbf{(A)} Schematic illustration of the stimulation paradigm.
+		An ensemble of networks is stimulated by an additional input of rate $\Delta h$.
+        \textbf{(B)} Population rate of individual networks is very noisy.
+        Even a strong stimulus ($\Delta h=XX$) can be difficult to identify.
+        \textbf{(C)} The mean rate $\overline{\nu}$ across the ensemble, however, is smooth.
+        A strong stimulus ($\Delta h=XX$) is not only easy to detect, the response of the bistable ensemble even remains affected by slow decay after stimulus offset.
+		\textbf{(D)} The bistable ensemble even amplifies stimuluations with low strength $\Delta h$.
+        \textbf{(E)} While the bistable ensemble (red) responds slower to the stimulation, it allows one to dissect stimulation strength more precisely.
+		\textbf{(F)} After stimulus offset, only bistable ensembles maintain stimulus information.
+		\textbf{(G)} The time-dependent dynamic range reveals pronounced discriminability for the bistable ensemble during and even after the stimulus.
+		% Effective dynamic range measures a time-dependent discriminability of a perturbation, time-dependant ability to discriminate external perturbations (TADEP).
+	}
+	\label{fig:dr}
+\end{figure*}
+
+\subsection{Discrimination of past input with ensemble of bistable networks}
+We discovered that spiking neural networks with homeostatic regulation during development generate large autocorrelations to compensate decreasing external input, and that these autocorrelations are a result from a fluctuation-induced bistability on the level of the population firing rate.
+The existence of autocorrelations suggests that such networks encode information about past inputs in their spiking activity.
+While this is straightforward for continuous signals, as e.g., for echo state networks~\cite{jaeger_echo_2001}, it is more involved to encode such information in a binary spiking mechanism, e.g., using memory units in liquid state machines~\cite{maass_real-time_2002}, and far from trivial to do so for bistable population activity observed here.
+For example, when stimulating a single network we observe a systematic increase in population firing rate for both bistable (\cref{fig:dr}B, red) and fluctuating (\cref{fig:dr}B, blue) networks during stimulus and it appears that after stimulus offset their dynamics fall back to either bistable or unistable activity, respectively.
+However, one can observe a systematic trend for the bistable network to end up in the high-firing state right after stimulus offset, suggesting a potential approach to read out information about the stimulus even after offset.
+
+As a first step towards making use of autocorrelations in bistable spiking neural networks to read out information about past input, we propose to consider ensembles of smaller networks stimulated in parallel (\cref{fig:dr}A).
+The ensemble of networks exploits the observation that there is an increased probability to start in the high-firing state after stimulus offset (\cref{fig:dr}B, red).
+Let us consider two ensembles that each consists of \num{50} independent networks with homeostatic regulation during development but different input strength:
+The \textit{bistable ensemble} has a lower $h$ and each network develops bistable activity;
+The \textit{fluctuating ensemble} has a higher $h$ and each network develops fluctuating activity.
+
+[[[MAM: could we think of better names for the 2 ensembles: bot of them are ``fluctuating'']]]
+
+In both cases, individual networks are independent such that, without stimulation, the mean rate across networks is stationary at about \SI{10}{\hertz} for both ensembles (\cref{fig:dr}C,D).
+During stimulation, both ensembles respond with an increase in their mean rates that is larger for stronger stimulation $\Delta h$.
+After stimulation, however, the mean rate of the fluctuating ensemble immediately drops back to baseline, while the mean rate of the bistable ensemble decays exponentially with a characteristic autocorrelation time.
+% TODO: Plot in SI
+This suggests that even after stimulus offset, we can read out information about the input.
+
+To quantify the capacity to encode information about the input at different times, we generalize the concept of dynamic range~\cite{kinouchi_optimal_2006, zierenberg_tailored_2020} to a time-dependent discriminability of a perturbation (\cref{fig:dr}E-G).
+Specifically, we consider the mean response of an ensemble to a given stimulus at each point in time (\cref{fig:dr}E,F).
+This requires to repeat a stimulus several times and to measure the mean response not over time but over repeated trials, an approach typical to computational neuroscience that exploits cyclostationarity~\cite{de_heuvel_characterizing_2020}.
+Notably, the mean response for fluctuating ensembles quickly changes from baseline to a characteristic response curve upon stimulus onset (\cref{fig:dr}E, blue) and immediately back (\cref{fig:dr}F, blue), while for bistable ensembles the change from baseline to characteristic response during onset requires more time (\cref{fig:dr}E, red) and after offset there is a transient phase with non-baseline responses that only slowly vanish over time (\cref{fig:dr}F, red).
+[[MAM: I'm confused: there is no time in Fig5E]]
+Analogous to common definitions of the dynamic range~\cite{kinouchi_optimal_2006}, we can define a discriminable interval at each point in time as the range of inputs where the response curve is between \SI{10}{\percent} and \SI{90}{\percent} of its maximum (see Appendix...).
+%TODO: specify
+The time-dependent dynamic range $\Delta(t)$ is then the width of this interval in logarithmic space (\cref{fig:dr}G).
+For fluctuating ensembles, $\Delta$ increases from zero to some fixed value during the stimulation, indicating that from the mean rate over fluctuating ensembles we can only read out information about the input during presentation.
+For bistable ensembles, however, $\Delta$ increases slowly during the stimulation, suggesting a somewhat slower response to the presentation of new inputs due to the recurrent autocorrelations.
+Importantly, $\Delta$ does not drop to zero for bistable ensembles after stimulus offset but --- after an initial drop --- decays slowly back to zero, indicating that from the mean firing rate across ensembles of bistable networks one can reliably read out information about the strength of the stimulation $\Delta h$.
